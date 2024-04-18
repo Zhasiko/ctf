@@ -1,0 +1,56 @@
+<?
+// Веб-хуки приходят в json, конвертируем его
+$hook = json_decode(file_get_contents('php://input'));
+  
+// Обновить Статусы сообщений
+if (isset($hook->statuses)) 
+{
+	// подключение к базе
+	$host = "";
+	$db = "";
+	$user = "";
+	$pass = "";
+	$mysqli = new mysqli($host, $user, $pass, $db);		
+	$mysqli->query("SET NAMES `utf8`");
+	if (@$mysqli->query("USE `".$db."`"))
+	{
+	
+	}
+	
+	//$str = '';		
+	
+	$messages = Array(); $i=1;
+	foreach ($hook->statuses as $status) 
+	{						
+   		// Перебор полей объекта. Тут с данными можно что-то сделать - например, положить в БД
+   		foreach ($status as $key => $value) 
+		{						
+			$messages[$i][$key] = $value;
+   		}
+		
+		$i++;
+ 	}
+	
+	foreach($messages as $k=>$v)
+	{
+		$messageId_ = $v["messageId"];
+		$status_ = $v["status"];
+		
+		$sql_update = "UPDATE `i_wazzup` SET `status`='".$status_."' WHERE `messageId`='".$messageId_."'";
+		//$update = $mysqli->query($sql_update);		
+		
+		//$str .= $sql_update;
+	}
+	
+	/*
+	// запись в файл
+	$name_doc = 'wazzup.txt';
+	$file_dir = $_SERVER["DOCUMENT_ROOT"].'/'.$name_doc;
+	$fp = fopen($file_dir, "w");
+	$fp = fopen($file_dir, "a");
+	$writeFile = fwrite($fp, $str);
+	if ($writeFile) fclose($fp);
+	*/
+	
+}
+?>

@@ -1,0 +1,239 @@
+<?php
+//error_reporting(E_ALL);
+//ini_set('display_errors', TRUE);
+//ini_set('display_startup_errors', TRUE);
+include_once($_SERVER['DOCUMENT_ROOT']."/libs/mysql.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/libs/api.php");
+$_SESSION["version"]=$lang;
+// проверка авторизации - запомнить меня
+$api->Managers->pr_cookieM();
+?>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title><?=(@$title2!='' ? $title2 : $title)?></title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta http-equiv = "X-UA-Compatible" content="IE=11" />
+    <meta name="autor" content="deweb.kz" />
+	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+	<link rel="shortcut icon" href="/library/img/favicon.ico">
+	<script type="text/javascript" src="/library/js/plugin/webfont/webfont.min.js"></script>
+	<script type="text/javascript">
+		WebFont.load({
+			//google: {"families":["Lato:300,400,700,900"]},
+			//google: {"families":["Roboto:300,400,700,900"]},
+			custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['/library/css/fonts.min.css']},
+			active: function() {
+				sessionStorage.fonts = true;
+			}
+		});
+	</script>
+	<link rel="stylesheet" href="/library/css/bootstrap.min.css?ver=1.1" />
+	<?php /*?><link rel="stylesheet" href="/library/css/atlantis.css?ver=1.2" /><?php */?>
+	<link rel="stylesheet" href="/library/css/atlantis2.css?ver=1.5" />
+    <link rel="stylesheet" href="/library/css/style.css?ver=1.5" />
+	<link rel="stylesheet" href="/library/css/style2.css?ver=2.1" />
+    <script type="text/javascript" src="/library/js/core/jquery.3.2.1.min.js"></script>
+</head>
+<body<?=($api->Managers->check_auth() == false && ($_SERVER['PHP_SELF'] == '/log.php' || $_SERVER['PHP_SELF'] == '/index.php' || $_SERVER['PHP_SELF'] == '/forget.php') ? ' class="login"' : '')?>>
+<?
+$GLOBALS["stat"] = '';
+if ($api->Managers->check_auth() == true && $api->Managers->check_auth_ip() == false) {
+	$api->Managers->logout_user();	
+	//echo 'Под вашим аккаунтом авторизовались с другого устройства';
+}	
+?>
+<div id="log_protocol"></div>
+	<div class="wrapper fullwidth-style">
+	<? if (substr($_SERVER["PHP_SELF"], 0, 6) == '/shop/') { ?>	
+	<div class="main-header" data-background-color="custom" custom-color="#1f1e2e">
+		<div class="nav-top">
+			<div class="container d-flex flex-row">
+				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon">
+						<i class="icon-menu"></i>
+					</span>
+				</button>
+			</div>
+		</div>
+		<div class="nav-bottom nav-bottom-dark py-md-1" data-background-color="custom" custom-color="#181824">
+			<div class="container d-flex flex-lg-row flex-column-reverse px-3 px-lg-0">
+				<ul class="nav page-navigation page-navigation-style-2 page-navigation-secondary mt-3 mt-lg-0">
+					<li class="nav-item">
+						<a class="nav-link" href="/">
+							<span class="menu-title">Главная</span>
+						</a>
+					</li>
+					<li class="nav-item<?=($_SERVER["PHP_SELF"] == '/shop/index.php' ? ' active' : '')?>">
+						<a class="nav-link" href="/shop/">
+							<span class="menu-title">Товары на продажу</span>
+						</a>
+					</li>
+					<li class="nav-item<?=($_SERVER["PHP_SELF"] == '/shop/gold.php' ? ' active' : '')?>">
+						<a class="nav-link" href="/shop/gold.php">
+							<span class="menu-title">Золото</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>	
+	<? } else if ($api->Managers->check_auth() == true) { ?>
+	<div class="main-header" data-background-color="custom" custom-color="#1f1e2e">
+		<div class="nav-top">
+			<div class="container d-flex flex-row">
+				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon">
+						<i class="icon-menu"></i>
+					</span>
+				</button>
+			</div>
+		</div>
+		<div class="nav-bottom nav-bottom-dark py-md-1" data-background-color="custom" custom-color="#181824">
+			<?php /*?><h3 class="title-menu d-flex d-lg-none">
+				Меню
+				<div class="close-menu"> <i class="flaticon-cross"></i></div>
+			</h3><?php */?>
+			<div class="container d-flex flex-lg-row flex-column-reverse px-3 px-lg-0">
+				<ul class="nav page-navigation page-navigation-style-2 page-navigation-secondary mt-3 mt-lg-0">
+					<li class="nav-item<?=(substr($_SERVER["PHP_SELF"], 0, 15) == '/order/' ? ' active' : '')?>">
+						<a class="nav-link" href="/order/">
+							<span class="menu-title">Товары на продажу</span>
+						</a>
+					</li>
+					<li class="nav-item<?=(substr($_SERVER["PHP_SELF"], 0, 15) == '/sales/' ? ' active' : '')?>">
+						<a class="nav-link" href="/sales/">
+							<span class="menu-title">Каталог</span>
+						</a>
+					</li>
+					<li class="nav-item<?=(substr($_SERVER["PHP_SELF"], 0, 14) == '/gold/' ? ' active' : '')?>">
+						<a class="nav-link" href="/gold/">
+							<span class="menu-title">Золото</span>
+						</a>
+					</li>
+					<li class="nav-item<?=(substr($_SERVER["PHP_SELF"], 0, 14) == '/site/' ? ' active' : '')?>">
+						<a class="nav-link" href="/site/">
+							<span class="menu-title">Заявки с сайта</span>
+						</a>
+					</li>
+					<li class="nav-item submenu<?=(substr($_SERVER["PHP_SELF"], 0, 18) == '/settings/' ? ' active' : '')?>">
+						<a class="nav-link" href="#">
+							<span class="menu-title">Настройки</span>
+						</a>
+						<div class="navbar-dropdown animated fadeIn">
+							<ul>
+									<? if ($api->Managers->man_block == 1 || $api->Managers->man_block == 2) { ?>
+								<li<?=(substr($_SERVER["PHP_SELF"], 0, 15) == '/staff/' ? ' class="active"' : '')?>>
+									<a href="/staff/">Пользователи</a>
+								</li>
+									<? } ?>
+									<? if ($api->Managers->man_block == 1) { ?>
+								<li<?=(substr($_SERVER["PHP_SELF"], 0, 26) == '/settings/filials/' ? ' class="active"' : '')?>>
+									<a href="/settings/filials/">Филиалы</a>
+								</li>
+								<li<?=(substr($_SERVER["PHP_SELF"], 0, 23) == '/settings/cats/' ? ' class="active"' : '')?>>
+									<a href="/settings/cats/">Категории</a>
+								</li>
+									<? } ?>
+								<li<?=($_SERVER["PHP_SELF"] == '/settings/change.php' ? ' class="active"' : '')?>>
+									<a href="/settings/change.php">Изменить пароль</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link logout_btn">
+							<span class="menu-title">Выход</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+    <? } ?>
+    	<? if (
+			($_SERVER['PHP_SELF'] != '/log.php') &&
+			($_SERVER['PHP_SELF'] != '/forget.php') &&
+			($_SERVER['PHP_SELF'] != '/index.php')
+		) { ?>
+    <div class="<?=($api->Managers->check_auth() == true || substr($_SERVER["PHP_SELF"], 0, 6) == '/shop/' ? 'main-panel ' : '')?>full-height">
+        <div class="container">
+            <div class="page-inner">
+                <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pb-3">
+                   		<? if (substr($_SERVER["PHP_SELF"], 0, 6) != '/shop/') { ?>
+					<div class="page-header">
+						<h4 class="page-title"><?=$title?></h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home"><a href="/manger/"><i class="flaticon-home"></i></a></li>
+							<li class="separator"><i class="flaticon-right-arrow"></i></li>
+							<?
+							if ($_SERVER['PHP_SELF'] == '/order/add.php')
+								echo '
+								<li class="nav-item"><a href="/order/">	Товары на продажу </a></li>
+								<li class="separator"><i class="flaticon-right-arrow"></i></li>
+								';
+		   					else if (
+									$_SERVER['PHP_SELF'] == '/sales/add.php' ||
+									$_SERVER['PHP_SELF'] == '/sales/sell.php'
+							)
+								echo '
+								<li class="nav-item"><a href="/sales/">	Каталог </a></li>
+								<li class="separator"><i class="flaticon-right-arrow"></i></li>
+								';
+		  					else if ($_SERVER['PHP_SELF'] == '/gold/add.php')
+								echo '
+								<li class="nav-item"><a href="/gold/">	Золото </a></li>
+								<li class="separator"><i class="flaticon-right-arrow"></i></li>
+								';
+		  					else if ($_SERVER['PHP_SELF'] == '/staff/add.php')
+								echo '
+								<li class="nav-item"><a href="/staff/">	Пользователи </a></li>
+								<li class="separator"><i class="flaticon-right-arrow"></i></li>
+								';
+		   					else if ($_SERVER['PHP_SELF'] == '/settings/cats/add.php')
+								echo '
+								<li class="nav-item"><a href="/settings/cats/">	Категории </a></li>
+								<li class="separator"><i class="flaticon-right-arrow"></i></li>
+								';
+							else if ($_SERVER['PHP_SELF'] == '/settings/filials/add.php')
+								echo '
+								<li class="nav-item"><a href="/settings/filials/"> Филиалы </a></li>
+								<li class="separator"><i class="flaticon-right-arrow"></i></li>
+								';
+
+
+								echo '<li class="nav-item"><a>'.$title.'</a></li>';
+							?>
+						</ul>
+						<div class="clear"></div>
+					</div>
+						<? } ?>
+					
+					<?php /*?><div><h2 class="pb-2 fw-bold"><?=$title?></h2></div><?php */?>
+                    <? if ($api->Managers->check_auth() == true && substr($_SERVER["PHP_SELF"], 0, 6) != '/shop/') { ?>
+                    <div class="ml-md-auto pb-2 py-md-0 mtm-10">
+                        <?
+						if ($api->Managers->man_block == 1)
+                        {
+							if ($_SERVER["PHP_SELF"] == '/settings/cats/index.php')
+								echo '<a class="btn btn-primary btn-round" href="add.php">Добавить категорию</a>';
+							else if ($_SERVER["PHP_SELF"] == '/settings/filials/index.php')
+								echo '<a class="btn btn-primary btn-round" href="add.php">Добавить филиал</a>';
+						}
+
+						if ($api->Managers->man_block == 1 || $api->Managers->man_block == 2)
+                        {
+							if ($_SERVER["PHP_SELF"] == '/staff/index.php')
+								echo '<a class="btn btn-primary btn-round" href="add.php">Добавить пользователя</a>';
+	                       	else if ($_SERVER["PHP_SELF"] == '/order/index.php')
+    	                    	echo '<a class="btn btn-primary btn-round" href="add.php">Добавить товар</a>';
+							else if ($_SERVER["PHP_SELF"] == '/gold/index.php')
+								echo '<a class="btn btn-primary btn-round" href="add.php">Добавить золото</a>';
+						}
+                        ?>
+                    </div>
+                    <? } ?>
+                </div>
+		<? } ?>
