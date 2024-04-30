@@ -1,4 +1,41 @@
 <?
+
+$envFile = __DIR__ . '/../env';
+// Проверяем, существует ли файл .env
+if (file_exists($envFile)) {
+    // Загружаем содержимое файла .env
+    $envContent = file_get_contents($envFile);
+
+    // Разбиваем содержимое файла на строки
+    $lines = explode("\n", $envContent);
+
+    // Обработка каждой строки
+    foreach ($lines as $line) {
+        // Разбиваем строку на ключ и значение
+        list($key, $value) = explode('=', $line, 2);
+
+        // Убираем лишние пробелы и кавычки
+        $key = trim($key);
+        $value = trim($value);
+
+        // Устанавливаем переменные окружения
+        putenv("$key=$value");
+        $_ENV[$key] = $value;
+        $_SERVER[$key] = $value;
+    }
+} else {
+    // Файл .env не найден
+    die('.env file not found.');
+}
+
+function decryptPassword($encryptedPassword, $key) {
+    list($encryptedPassword, $iv) = explode('::', base64_decode($encryptedPassword), 2);
+    return openssl_decrypt($encryptedPassword, 'aes-256-cbc', $key, 0, $iv);
+}
+
+// Получаем значение encryption_key
+$encryption_key = getenv('encryption_key');
+
 $lang="ru";
 $title="Добавить пользователя";
 if (isset($_GET["edit"]) && intval($_GET["edit"])!=0)
@@ -48,7 +85,8 @@ if ($api->Managers->check_auth() == true)
                         $cat_value = $r["id_section"];
                         $user_name_value = stripslashes($r["name"]);
                         $login_value = $r["login"];
-                        $password_value = $r["pass"];
+                        $password_value = decryptPassword($r["pass"], $encryption_key);
+						// $hashed_password = password_hash($password_value, PASSWORD_DEFAULT);
 						$timestamp_x = $r["timestamp_x"];
 						$phone_value = $r["phone"];
                     }
@@ -68,6 +106,15 @@ if ($api->Managers->check_auth() == true)
 					}
 
 					$password_value = randomPassword();
+					
+					$hashed_password = password_hash($password_value, PASSWORD_DEFAULT);
+
+					// // При аутентификации проверка пароля с хэшированным паролем из базы данных
+					// if (password_verify($введенный_пароль, $хэшированный_пароль_из_базы_данных)) {
+					// 	echo "Пароль верный";
+					// } else {
+					// 	echo "Пароль неверный";
+					// }
 				}
                 ?>
                 <div class="form-group form-show-validation row">
@@ -93,7 +140,7 @@ if ($api->Managers->check_auth() == true)
 							<option value="1"<?=($cat_value == 1 ? ' selected' : '')?>> Админ </option>
 							<option value="2"<?=($cat_value == 2 ? ' selected' : '')?>> Преподователь </option>
 							<option value="3"<?=($cat_value == 3 ? ' selected' : '')?>> Студент </option>
-							<option value="4"<?=($cat_value == 4 ? ' selected' : '')?>> Компания </option>
+							<!-- <option value="4"<?=($cat_value == 4 ? ' selected' : '')?>> Компания </option> -->
 							<!-- <option value="5"<?=($cat_value == 5 ? ' selected' : '')?>> Главный менеджер </option> -->
 						</select>
                         <span class="control__help" id="error_cat"></span>
@@ -208,7 +255,7 @@ if ($api->Managers->check_auth() == true)
 					jQuery.ajax(
 					{
 						url: "ajax.php",
-						data: "do=<?=(isset($_GET["edit"]) && intval($_GET["edit"]) != 0 ? 'editUser' : 'addUser')?>&active="+jQuery("#active").val()+"&cat="+jQuery("#cat").val()+"&name="+jQuery("#name").val()+"&phone="+jQuery("#phone").val()+"&login="+jQuery("#login").val()+"&pass="+jQuery("#pass").val()+"<?=(isset($_GET["edit"]) && intval($_GET["edit"]) != 0 ? '&edit='.intval($_GET["edit"]) : '')?>&x=secure",
+						data: "do=<?=(isset($_GET["edit"]) && intval($_GET["edit"]) != 0 ? 'editUser' : 'addUser')?>&active="+jQuery("#active").val()+"&cat="+jQuery("#cat").val()+"&name="+jQuery("#name").val()+"&phone="+jQuery("#phone").val()+"&login="+jQuery("#login").val()+"&pass="+ jQuery("#pass").val() +"<?=(isset($_GET["edit"]) && intval($_GET["edit"]) != 0 ? '&edit='.intval($_GET["edit"]) : '')?>&x=secure",
 						type: "POST",
 						dataType : "html",
 						cache: false,

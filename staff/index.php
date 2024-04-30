@@ -37,7 +37,7 @@ if ($api->Managers->check_auth() == true)
                                     <th>ФИ</th>
 									<th>Телефон</th>
 									<th>Логин</th>
-                                    <th>Пароль</th>
+                                    <!-- <th>Пароль</th> -->
                                     <th>Статус</th>
                                 </tr>
 							</thead>
@@ -56,7 +56,7 @@ if ($api->Managers->check_auth() == true)
                                 <td><?=$r["name"]?></td>
 								<td><?=$r["phone"]?></td>
                                 <td><?=$r["login"]?></td>
-                                <td><?=$r["pass"]?></td>
+                                <!-- <td><?=$r["pass"]?></td> -->
                                 <td><?=(intval($r["active"]) == 1 ? 'активный' : 'заблокированный')?></td>
                             </tr>
                             <?
