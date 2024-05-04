@@ -850,7 +850,7 @@ class Mail
                 if (!$this->ValidEmail($value))
                 {
                     $this->status_mail['status'] = false;
-                    $this->status_mail['message'] = "ошибка : не верный email ".$value;
+                    $this->status_mail['message'] = "ошибка : неверный email ".$value;
                     return FALSE;
                 }
             }
@@ -867,7 +867,7 @@ class Mail
             if (!$this->ValidEmail($aad))
             {
                 $this->status_mail['status'] = false;
-                $this->status_mail['message'] = "ошибка : не верный email ".$aad;
+                $this->status_mail['message'] = "ошибка : неверный email ".$aad;
                 return FALSE;
             }
         }

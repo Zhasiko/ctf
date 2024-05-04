@@ -1,4 +1,6 @@
 <?
+require_once "get_encr_key.php";
+// $encryption_key = "ZHIRKAIMB";
 //error_reporting(E_ALL);
 //ini_set('display_errors', TRUE);
 //ini_set('display_startup_errors', TRUE);
@@ -45,26 +47,57 @@ if (
 	
 	/*if ($response != null && $response->success) 
 	{*/					
-		if ($api->Managers->check_login($login, $pass) == true)
+		// echo $login;
+		// echo encryptPassword($pass, $encryption_key);
+		// echo decryptPassword("test", $encryption_key);
+		if ($api->Managers->check_login($login, $pass) != false) // encryptPassword($pass, $encryption_key)
 		{
-			$api->Managers->login_user($login, $pass);
 			
-			if (isset($_POST["remember"]) && intval($_POST["remember"])==1) {			
-				echo 'jQuery.cookie("man_auth_site", "'.$login."|".sha1($pass).'", { expires: 7, path: "/"}); ';
+			$password = $api->Managers->check_login($login, $pass);
+			
+			// list($password, $iv) = explode('::', base64_decode($password), 2);
+
+			$normpassword = decryptPassword($password, $encryption_key);
+
+			// echo $normpassword;
+			// echo $password;
+			
+			if($pass == $normpassword){
+				$api->Managers->login_user($login, $pass);
+				// echo $normpassword;
+				if (isset($_POST["remember"]) && intval($_POST["remember"])==1) {			
+					echo 'jQuery.cookie("man_auth_site", "'.$login."|".sha1($normpassword).'", { expires: 7, path: "/"}); ';
+				}
+				
+				$link = '/order/';
+				if ($api->Managers->man_block == 4)		$link = '/order/add.php';
+				else if ($api->Managers->man_block == 5)	$link = '/order/?status=10';
+				
+				echo ' 			
+				jQuery(document).ready(function()
+				{ 			
+					setTimeout(function() { self.location = "'.$link.'"; }, 50);
+				});
+				';
 			}
-			
-			$link = '/order/';
-			if ($api->Managers->man_block == 4)		$link = '/order/add.php';
-			else if ($api->Managers->man_block == 5)	$link = '/order/?status=10';
-			
-			echo ' 			
-			jQuery(document).ready(function()
-			{ 			
-				setTimeout(function() { self.location = "'.$link.'"; }, 50);
-			});
-			';
+			else if (
+				$api->Managers->check_block($login, $pass) == true
+			)
+			{
+				echo '		
+				jQuery("#protocolLog").html("<p style=\"color:#f00;margin:10px 0;\">Ваш логин заблокирован, обратитесь к администратору.</p>").slideDown(700);				
+				';	
+			}
+			else 
+			{
+				//$api->Managers->check_log($login, $pass); 
+				echo '		
+				jQuery("#protocolLog").html("<p style=\"color:#f00;margin:10px 0;\">Неверный логин или пароль!</p>").slideDown(700);				
+				';
+			}
 		
 		} 
+
 		else if (
 			$api->Managers->check_block($login, $pass) == true
 		)
@@ -77,7 +110,7 @@ if (
 		{
 			//$api->Managers->check_log($login, $pass); 
 			echo '		
-			jQuery("#protocolLog").html("<p style=\"color:#f00;margin:10px 0;\">Не верный логин или пароль!</p>").slideDown(700);				
+			jQuery("#protocolLog").html("<p style=\"color:#f00;margin:10px 0;\">Неверный логин или пароль!</p>").slideDown(700);				
 			';
 		}
 	/*}
@@ -91,4 +124,5 @@ if (
 	echo '
 	</script>';
 }
+
 ?>

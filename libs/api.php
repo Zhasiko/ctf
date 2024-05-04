@@ -1,4 +1,45 @@
 <?
+
+
+// require_once "../get_encr_key.php";
+// $envFile = __DIR__ . '../env';
+// // Проверяем, существует ли файл .env
+// if (file_exists($envFile)) {
+//     // Загружаем содержимое файла .env
+//     $envContent = file_get_contents($envFile);
+
+//     // Разбиваем содержимое файла на строки
+//     $lines = explode("\n", $envContent);
+
+//     // Обработка каждой строки
+//     foreach ($lines as $line) {
+//         // Разбиваем строку на ключ и значение
+//         list($key, $value) = explode('=', $line, 2);
+
+//         // Убираем лишние пробелы и кавычки
+//         $key = trim($key);
+//         $value = trim($value);
+
+//         // Устанавливаем переменные окружения
+//         putenv("$key=$value");
+//         $_ENV[$key] = $value;
+//         $_SERVER[$key] = $value;
+//     }
+// } else {
+//     // Файл .env не найден
+//     die('.env file not found.');
+// }
+
+
+
+// Получаем значение encryption_key
+// $encryption_key = getenv('encryption_key');
+
+
+// require_once($_SERVER["DOCUMENT_ROOT"]."/get_encr_key.php");
+// echo $_SERVER["DOCUMENT_ROOT"]."/get_encr_key.php";
+
+
 $api = new API;
 class API
 {
@@ -29,6 +70,7 @@ class API
 # Класс страниц
 class Pages
 {
+		
 		private $lang;
 		private $url;
 		private $query;
@@ -59,6 +101,17 @@ class Pages
 		private function count_pages()
 		{
 			$this->pages = ceil($this->elements_count / $this->per_page);
+		}
+
+		private function encryptPassword($password, $key) {
+			$iv = openssl_random_pseudo_bytes(16);
+			$encrypted = openssl_encrypt($password, 'aes-256-cbc', $key, 0, $iv);
+			return base64_encode($encrypted . '::' . $iv);
+		}
+		
+		private function decryptPassword($encryptedPassword, $key) {
+			list($encryptedPassword, $iv) = explode('::', base64_decode($encryptedPassword), 2);
+			return openssl_decrypt($encryptedPassword, 'aes-256-cbc', $key, 0, $iv);
 		}
 	
 		// Начинасть с
@@ -294,6 +347,9 @@ class Pagination
 # Класс строк
 class Strings {
 	
+			
+	
+
 	public function date($lang, $str, $type_from, $type_to)
 	{
 		$conv_date ='';
@@ -729,10 +785,10 @@ class Managers
 	public function login_user($login, $pass)
 	{
 		# Если авторизация верна
-		if ($this->check_login($login, $pass) == true)
+		if ($this->check_login($login, $pass) != false)
 		{
 			# Получаем данные пользователя			
-			list($manager_id, $manager_name, $manager_block) = mysql_fetch_row(mysql_query("SELECT `id`, `name`, `id_section` FROM `i_manager_users` WHERE `active`='1' AND `login`='".addslashes($login)."' AND `pass`='".addslashes($pass)."' LIMIT 1"));
+			list($manager_id, $manager_name, $manager_block) = mysql_fetch_row(mysql_query("SELECT `id`, `name`, `id_section` FROM `i_manager_users` WHERE `active`='1' AND `login`='".addslashes($login)."' LIMIT 1"));
 			
 			# Генерируем сессию
 			$manager_new_sess = $this->sess_gen();
@@ -782,16 +838,77 @@ class Managers
 	}	
 	
 	# Проверка данных авторизации
+	// public function check_login($login, $pass)
+	// {
+	// 	if (($login != '') && ($pass != '') && (mysql_num_rows(mysql_query("SELECT `id` FROM `i_manager_users` WHERE `active`='1' AND `login`='".$login."' AND `pass`='".$pass."' LIMIT 1")) == 1))
+	// 	{
+	// 	  return true;
+	// 	} else {
+	// 	  return false;
+	// 	}
+	// }	
+	public function decryptPassword($encryptedPassword, $key) {
+		list($encryptedPassword, $iv) = explode('::', base64_decode($encryptedPassword), 2);
+		return openssl_decrypt($encryptedPassword, 'aes-256-cbc', $key, 0, $iv);
+	}
+
 	public function check_login($login, $pass)
 	{
-		if (($login != '') && ($pass != '') && (mysql_num_rows(mysql_query("SELECT `id` FROM `i_manager_users` WHERE `active`='1' AND `login`='".$login."' AND `pass`='".$pass."' LIMIT 1")) == 1))
+		$encryption_key = "ZHIRKAIMB";
+		// $password = mysql_num_rows("SELECT `pass` FROM `i_manager_users` WHERE `login`='".$login."' LIMIT 1");
+		// print_r($password);
+		// echo $password;
+		if (($login != '') && ($pass != '') && (mysql_num_rows(mysql_query("SELECT `id` FROM `i_manager_users` WHERE `active`='1' AND `login`='".$login."' LIMIT 1")) == 1))
 		{
-		  return true;
+			$query = mysql_query("SELECT `pass` FROM `i_manager_users` WHERE `login`='".$login."' LIMIT 1");
+			if (mysql_num_rows($query) > 0){
+				while($r=mysql_fetch_array($query)){
+					$password = $r["pass"];
+				}
+			}
+			
+			// echo decryptPassword($password, $encryption_key);
+			// echo $password;
+			// list($password, $iv) = explode('::', base64_decode($password), 2);
+			// $decrypted = openssl_decrypt($password, 'aes-256-cbc', $encryption_key, 0, $iv);
+
+			// echo $decrypted;
+			// echo $password;
+			return $password;
+			// if($pass == decryptPassword($password, $encryption_key)){
+			// 	return true;
+			// } else{
+			// 	return false;
+			// }
+			// echo $password;
+			// return true;
 		} else {
 		  return false;
 		}
 	}	
+
+	// public function check_login($login, $pass)
+	// {
+	// 	if (($login != '') && ($pass != '') && (mysql_num_rows(mysql_query("SELECT `id` FROM `i_manager_users` WHERE `active`='1' AND `login`='".$login."' LIMIT 1")) == 1)) // AND `pass`='".$pass."' 
+	// 	{
+			
+	// 		$password = mysql_num_rows(mysql_query("SELECT `pass` FROM `i_manager_users` WHERE `login`='".$login."' LIMIT 1"));
+	// 		print_r($password);
+	// 		if($pass == decryptPassword($password, $encryption_key)){
+				
+	// 			return true;
+	// 		} else{
+	// 			return false;
+	// 		}
+
+	// 		return true;
+	// 	} else {
+	// 	  return false;
+	// 	}
+	// }	
 	
+
+
 	public function check_block($login, $pass)
 	{
 		if (($login != '') && ($pass != '') && (mysql_num_rows(mysql_query("SELECT `id` FROM `i_manager_users` WHERE `active`='0' AND `login`='".$login."' LIMIT 1")) == 1))

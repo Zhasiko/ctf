@@ -14,4 +14,6 @@ else
 	</script>
 	';
 	
-require($_SERVER["DOCUMENT_ROOT"]."/libs/footer.php");?>
+require($_SERVER["DOCUMENT_ROOT"]."/libs/footer.php");
+
+?>
