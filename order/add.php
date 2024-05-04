@@ -1,4 +1,6 @@
 <?
+
+
 $lang="ru";
 $title="Создать задачу";
 if (isset($_GET["edit"]) && intval($_GET["edit"])!=0)
@@ -17,6 +19,22 @@ if ($api->Managers->check_auth() == true)
 	)
 	{
 		?>
+		<style>
+
+			body {
+				background-color: #21232c; /* Цвет фона */
+			}
+			.card {
+				background-color: #1a2035; /* Цвет фона */
+			}
+			.card-body{
+				color: white !important;
+			}
+
+			/* .basic-datatables{
+				background-color: #21232c;
+			} */
+		</style>
 		<div class="card">            
 			<?
 			$no_need = Array('id', 'create_date', 'id_man', 'id_exam', 'id_broker', 'link_man', 'link_man2', 'pdf_num', 'pdf_seriya', 'pdf_file', 'excel_file', 'date_edit_exam', 'status', 'status2', 'id_temp', 'name_temp', 'info_temp', 'd_temp', 'date_oform', 'pdf_file_client', 'hash');
@@ -240,7 +258,7 @@ if ($api->Managers->check_auth() == true)
 				/* .container {
 					background-color: black;
 				} */
-			</style>			
+			</style>		
 			<? foreach($columns as $k=>$v)	{ ?>
 				<? if ($v == 'task_name') { ?>
 			<div class="card-header">
@@ -257,7 +275,7 @@ if ($api->Managers->check_auth() == true)
 				<? } ?>
 				
 				<div class="form-group form-show-validation row">
-                    <label for="<?=$v?>" class="col-lg-4 col-md-3 col-sm-4 mt-sm-2 text-right"  style = "color: white !important;">
+				<label for="<?=$v?>" class="col-lg-4 col-md-3 col-sm-4 mt-sm-2 text-right"  style = "color: white !important;">
 						<? if ($v != 'uvesos') { ?>
 						<?=$name_ru[$v]?> <?=($mandat[$v]==1?'<span class="required-label">*</span>':'')?>
 						<? } ?>
