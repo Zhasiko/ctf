@@ -189,7 +189,6 @@ if (
 		)
 		{		
 			// только брокер
-			print_r($_POST);
 			if (
 				($api->Managers->man_block == 4) ||
 				(

@@ -1,6 +1,4 @@
 <?
-
-
 $lang="ru";
 $title="Создать задачу";
 if (isset($_GET["edit"]) && intval($_GET["edit"])!=0)
@@ -19,22 +17,6 @@ if ($api->Managers->check_auth() == true)
 	)
 	{
 		?>
-		<style>
-
-			body {
-				background-color: #21232c; /* Цвет фона */
-			}
-			.card {
-				background-color: #1a2035; /* Цвет фона */
-			}
-			.card-body{
-				color: white !important;
-			}
-
-			/* .basic-datatables{
-				background-color: #21232c;
-			} */
-		</style>
 		<div class="card">            
 			<?
 			$no_need = Array('id', 'create_date', 'id_man', 'id_exam', 'id_broker', 'link_man', 'link_man2', 'pdf_num', 'pdf_seriya', 'pdf_file', 'excel_file', 'date_edit_exam', 'status', 'status2', 'id_temp', 'name_temp', 'info_temp', 'd_temp', 'date_oform', 'pdf_file_client', 'hash');
@@ -207,6 +189,10 @@ if ($api->Managers->check_auth() == true)
 			$mandat["task_type"] = 1;
 			$mandat["solving_avg"] = 1;
 			$mandat["level"] = 1;
+			$mandat["link"] = 1;
+			$mandat["description"] = 1;
+			$mandat["flag"] = 1;
+			$mandat["points"] = 1;
 
 
 			$type_field["task_name"] = 'input';
@@ -258,7 +244,7 @@ if ($api->Managers->check_auth() == true)
 				/* .container {
 					background-color: black;
 				} */
-			</style>		
+			</style>  				
 			<? foreach($columns as $k=>$v)	{ ?>
 				<? if ($v == 'task_name') { ?>
 			<div class="card-header">

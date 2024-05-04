@@ -76,16 +76,18 @@ if ($api->Managers->check_auth() == true)
 				background-color: #021b3b;; 
 			}
 
-			.card-body {
+			/* .card-body {
 				background-color: #021b3b;; 
-			}
+			} */
 
 
 			.btn {
 				background-color: white;;
 			}
 
-
+            .card-body{
+                color: white !important;
+            }
 			.form-control {
 				background-color: #a1a398; 
 			}
