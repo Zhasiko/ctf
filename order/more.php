@@ -184,7 +184,7 @@ if ($api->Managers->check_auth() == true) {
 						<span class = "star-avg">
 							<?php 
 							echo "<span class='stars'>$stars</span>";
-							echo "<span class='solving-avg'> $solving_avg</span>";
+							echo "<span class='solving-avg'> $solving_avg min</span>";
 							?>
                         </span>
                     </div>
@@ -241,13 +241,7 @@ if ($api->Managers->check_auth() == true) {
 	{
 
         $sql_wh = "";
-        if ($api->Managers->man_block == 2)
-            $sql_wh = " AND (`status`=1 OR ( (`status`=2 OR `status`=3 OR `status`=4) AND `id_man`='" . $api->Managers->man_id . "') )";
-        else if ($api->Managers->man_block == 3)
-            $sql_wh = " AND ( ( (`status`=1 OR `status`=2) AND (`id_exam`='" . $api->Managers->man_id . "' OR `id_exam`=0 OR `id_exam` IS NULL) ) OR ( (`status`=3 OR `status`=4) AND `id_exam`='" . $api->Managers->man_id . "') )";
-        else if ($api->Managers->man_block == 4)
-            $sql_wh = " AND `id_broker`='" . $api->Managers->man_id . "'";
-
+       
         $id = intval($_GET["id"]);
         $s = mysql_query("SELECT * FROM `i_order` WHERE `id`='" . $id . "'" . $sql_wh . " LIMIT 1");
         if (mysql_num_rows($s) > 0) {
