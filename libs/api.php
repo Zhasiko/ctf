@@ -857,7 +857,7 @@ class Managers
 		$encryption_key = "ZHIRKAIMB";
 		// $password = mysql_num_rows("SELECT `pass` FROM `i_manager_users` WHERE `login`='".$login."' LIMIT 1");
 		// print_r($password);
-		// echo $password;
+		
 		if (($login != '') && ($pass != '') && (mysql_num_rows(mysql_query("SELECT `id` FROM `i_manager_users` WHERE `active`='1' AND `login`='".$login."' LIMIT 1")) == 1))
 		{
 			$query = mysql_query("SELECT `pass` FROM `i_manager_users` WHERE `login`='".$login."' LIMIT 1");
@@ -866,6 +866,7 @@ class Managers
 					$password = $r["pass"];
 				}
 			}
+			// print_r($password);
 			
 			// echo decryptPassword($password, $encryption_key);
 			// echo $password;
