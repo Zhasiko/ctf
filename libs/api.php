@@ -462,7 +462,7 @@ class Strings {
 		{
 			$date_time 	= explode(' ', $str);
 			$date 		= explode('-', $date_time[0]);
-			$time = explode(':', isset($date_time[1]));
+			$time = explode(':', $date_time[1]);
 			
 			# Обычный тип даты
 			if ($type_to == 'date')
@@ -489,7 +489,8 @@ class Strings {
 			# Дата и время
 			if ($type_to == 'datetime')
 			{
-				$conv_date = isset($date[2]).'.'.isset($date[1]).'.'.isset($date[0]).' '.$lang_mass[$lang]['at'].' '.isset($time[0]).':'.isset($time[1]);
+
+				$conv_date = $date[2].'.'.$date[1].'.'.$date[0].' '.$lang_mass[$lang]['at'].' '.$time[0].':'.$time[1];
 			}
 			
 			# Текстовые дата и время
