@@ -274,7 +274,7 @@ if ($api->Managers->check_auth() == true)
 						while($r=mysql_fetch_array($s))
 						{							
 							$link = '';							
-							$link = ' style="cursor:pointer;" onclick="location.href=\'more.php?edit='.$r["id"].'\'"';
+							$link = ' style="cursor:pointer;" onclick="location.href=\'more.php?id='.$r["id"].'\'"';
 							$task_name = $r["task_name"];
 							$date = $api->Strings->date($lang,$r["create_date"],'sql','datetime');
 							$points = intval($r["points"]);
