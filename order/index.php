@@ -16,8 +16,8 @@ if ($api->Managers->check_auth() == true)
 	{		
 		$php_self = '/order/';
 		$get_type = '?'.preg_replace('#(^|&)task_type=[0-9]+(|$)#', '', $_SERVER['QUERY_STRING']);
-		$get_exam = '?'.preg_replace('#(^|&)exam=[0-9]+(|$)#', '', $_SERVER['QUERY_STRING']);
-		$get_broker = '?'.preg_replace('#(^|&)level=[0-9]+(|$)#', '', $_SERVER['QUERY_STRING']);
+		// $get_category = '?'.preg_replace('#(^|&)category=[0-9]+(|$)#', '', $_SERVER['QUERY_STRING']);
+		$get_level = '?'.preg_replace('#(^|&)level=[0-9]+(|$)#', '', $_SERVER['QUERY_STRING']);
 		
 		$sql_get = "";
 		
@@ -37,33 +37,33 @@ if ($api->Managers->check_auth() == true)
 		// 	$sql_get = " AND (`date_issue` >= '".$dateSS." 00:00:00' AND `date_issue` <= '".$dateDD." 23:59:59')";
 
 		if (isset($_GET["search"]) && $_GET["search"] != '')
-			$sql_get .= " AND (INSTR(`task_name`, '".$api->Strings->pr($_GET["search"]).")";
+			$sql_get .= " AND (INSTR(`task_name`, '".$api->Strings->pr($_GET["search"])."'))";
 		
-		if (isset($_GET["task_type"]) && (intval($_GET["task_type"]) >= 1 && intval($_GET["task_type"]) <= 4))
-			$sql_get .= " AND `task_type`=".intval($_GET["task_type"]);
-		else if (
-			(isset($_GET["task_type"]) && intval($_GET["task_type"]) == 10) &&
-			(
-				$api->Managers->man_block == 1 || // админ 
-				$api->Managers->man_block == 5 // глав менеджер
-			)
-		)
-			$sql_get .= " AND `task_type`=0";
+		if (isset($_GET["task_type"]))
+			$sql_get .= " AND `task_type`='".$_GET["task_type"]."'";
+		// else if (
+		// 	(isset($_GET["task_type"]) && intval($_GET["task_type"]) == 10) &&
+		// 	(
+		// 		$api->Managers->man_block == 1 || // админ 
+		// 		$api->Managers->man_block == 5 // глав менеджер
+		// 	)
+		// )
+		// 	$sql_get .= " AND `task_type`=0";
 		
-		$users = Array(); $exams = Array(); $brokers = Array();
-		$sU = mysql_query("SELECT * FROM `i_manager_users`");
-		if (mysql_num_rows($sU) > 0)
-		{	
-			while($rU=mysql_fetch_array($sU))
-			{
-				$users[$rU["id"]]["name"] = stripslashes($rU["name"]);	
+		// $users = Array(); $exams = Array(); $brokers = Array();
+		// $sU = mysql_query("SELECT * FROM `i_manager_users`");
+		// if (mysql_num_rows($sU) > 0)
+		// {	
+		// 	while($rU=mysql_fetch_array($sU))
+		// 	{
+		// 		$users[$rU["id"]]["name"] = stripslashes($rU["name"]);	
 				
-				if ($rU["id_section"] == 3)
-					$exams[$rU["id"]] = stripslashes($rU["name"]);
-				else if ($rU["id_section"] == 4)
-					$brokers[$rU["id"]] = stripslashes($rU["name"]);
-			}
-		}	
+		// 		if ($rU["id_section"] == 3)
+		// 			$exams[$rU["id"]] = stripslashes($rU["name"]);
+		// 		else if ($rU["id_section"] == 4)
+		// 			$brokers[$rU["id"]] = stripslashes($rU["name"]);
+		// 	}
+		// }	
 		
 		?>
 		<style>
@@ -73,21 +73,20 @@ if ($api->Managers->check_auth() == true)
 			}
 
 			.card {
-				background-color: #021b3b;; 
+				background-color: white;; 
 			}
 
-			/* .card-body {
+			.card-body {
+				color: white;;
 				background-color: #021b3b;; 
-			} */
+			}
 
 
 			.btn {
 				background-color: white;;
 			}
 
-            .card-body{
-                color: white !important;
-            }
+
 			.form-control {
 				background-color: #a1a398; 
 			}
@@ -107,7 +106,7 @@ if ($api->Managers->check_auth() == true)
 				<script type="text/javascript">
 					
 					function getSearchD() {
-						setTimeout(function() { self.location = "/order/?dateSS="+jQuery("#dateSS").val()+"&dateDD="+jQuery("#dateDD").val()<?=(isset($_GET["task_type"]) ? '+"&task_type='.$_GET["task_type"].'"' : '').(isset($_GET["exam"]) ? '+"&exam='.$_GET["exam"].'"' : '').(isset($_GET["broker"]) ? '+"&broker='.$_GET["broker"].'"' : '').(isset($_GET["search"]) ? '+"&search='.$_GET["search"].'"' : '')?>; }, 50);
+						setTimeout(function() { self.location = "/order/?"<?=(isset($_GET["task_type"]) ? '+"&task_type='.$_GET["task_type"].'"' : '').(isset($_GET["level"]) ? '+"&level='.$_GET["level"].'"' : '').(isset($_GET["search"]) ? '+"&search='.$_GET["search"].'"' : '')?>; }, 50);
 					}
 
 					function funcSearchD(event){
@@ -117,7 +116,7 @@ if ($api->Managers->check_auth() == true)
 					}
 
 					function getSearch() {
-						setTimeout(function() { self.location = "/order/?search="+jQuery("#search").val()<?=(isset($_GET["task_type"]) ? '+"&task_type='.$_GET["task_type"].'"' : '').(isset($_GET["exam"]) ? '+"&exam='.$_GET["exam"].'"' : '').(isset($_GET["broker"]) ? '+"&broker='.$_GET["broker"].'"' : '').(isset($_GET["dateSS"]) ? '+"&dateSS='.$_GET["dateSS"].'"' : '').(isset($_GET["dateDD"]) ? '+"&dateDD='.$_GET["dateDD"].'"' : '')?>; }, 50);
+						setTimeout(function() { self.location = "/order/?search="+jQuery("#search").val()<?=(isset($_GET["task_type"]) ? '+"&task_type='.$_GET["task_type"].'"' : '').(isset($_GET["level"]) ? '+"&level='.$_GET["level"].'"' : '')?>; }, 50);
 					}
 
 					function funcSearch(event){
@@ -131,39 +130,16 @@ if ($api->Managers->check_auth() == true)
 							setTimeout(function() { self.location = "<?=$php_self.$get_type.($get_type!='' && $get_type!='?' ? '&' : '')?>task_type="+jQuery("#task_type").val(); }, 50);
 						else
 							setTimeout(function() { self.location = "<?=$php_self.($get_type!='?' ? $get_type : '')?>"; }, 50);
-					}	
+					}
 					
-					function chooseExam() {
-						if (jQuery("#exam").val() != '-1' && jQuery("#exam").val() != '')
-							setTimeout(function() { self.location = "<?=$php_self.$get_exam.($get_exam!='' && $get_exam!='?' ? '&' : '')?>exam="+jQuery("#exam").val(); }, 50);
-						else
-							setTimeout(function() { self.location = "<?=$php_self.($get_exam!='?' ? $get_exam : '')?>"; }, 50);
-					}	
 					
 					function chooseBroker() {
-						if (jQuery("#level").val() != '-1' && jQuery("#level").val() != '')
-							setTimeout(function() { self.location = "<?=$php_self.$get_broker.($get_broker!='' && $get_broker!='?' ? '&' : '')?>level="+jQuery("#level").val(); }, 50);
+						if (jQuery("#level").val() != '')
+							setTimeout(function() { self.location = "<?=$php_self.$get_level.($get_level!='' && $get_level!='?' ? '&' : '')?>level="+jQuery("#level").val(); }, 50);
 						else
-							setTimeout(function() { self.location = "<?=$php_self.($get_broker!='?' ? $get_broker : '')?>"; }, 50);
+							setTimeout(function() { self.location = "<?=$php_self.($get_level!='?' ? $get_level : '')?>"; }, 50);
 					}	
 					
-					<? if ($api->Managers->man_block == 1 || $api->Managers->man_block == 2 || $api->Managers->man_block == 5) { ?>
-					function get_ExcelOder()
-					{															
-						jQuery.ajax(
-						{
-							url: "ajax.php",
-							data: "do=get_ExcelOder&x=secure<?=(isset($_GET["task_type"]) ? '&task_type='.$_GET["task_type"] : '').(isset($_GET["exam"]) ? '&exam='.$_GET["exam"] : '').(isset($_GET["level"]) ? '&level='.$_GET["level"] : '').(isset($_GET["dateSS"]) ? '&dateSS='.$_GET["dateSS"] : '').(isset($_GET["dateDD"]) ? '&dateDD='.$_GET["dateDD"] : '')?>",
-							type: "POST",
-							dataType : "html",
-							cache: false,
-
-							beforeSend: function()		{ jQuery("#get_ExcelOder").hide(); jQuery("#load_ExcelOder").show(); },
-							success:  function(data)  	{ jQuery("#protocol_ExcelOder").html(data); jQuery("#get_ExcelOder").show(); jQuery("#load_ExcelOder").hide(); },
-							error: function()         	{ jQuery("#protocol_ExcelOder").html("<p style='color:#f00'>Невозможно связаться с сервером!</p>"); jQuery("#get_ExcelOder").show(); jQuery("#load_ExcelOder").hide(); }
-						});																						
-					}
-					<? } ?>
 
 				</script>
 				<div class="row">
@@ -171,30 +147,20 @@ if ($api->Managers->check_auth() == true)
 						<select id="task_type" class="form-control form-control-sm" onchange="chooseStatus()" style="margin:3px 0 0">
 							<option value=""> все категории </option>							
 								// <? if ($api->Managers->man_block == 1 || $api->Managers->man_block == 5) { ?>
-							<option value="10"<?=(isset($_GET["task_type"]) && intval($_GET["task_type"])==10 ? ' selected="selected"' : '')?>> stegano </option>
+							<option value="stegano"<?=(isset($_GET["task_type"]) && $_GET["task_type"]=='stegano' ? ' selected="selected"' : '')?>> stegano </option>
 								// <? } ?>
-							<option value="1"<?=(isset($_GET["task_type"]) && intval($_GET["task_type"])==1 ? ' selected="selected"' : '')?>> web </option>
-							<option value="2"<?=(isset($_GET["task_type"]) && intval($_GET["task_type"])==2 ? ' selected="selected"' : '')?>> crypto </option>
-							<option value="3"<?=(isset($_GET["task_type"]) && intval($_GET["task_type"])==3 ? ' selected="selected"' : '')?>> прочее </option>
+							<option value="web"<?=(isset($_GET["task_type"]) && $_GET["task_type"]=='web' ? ' selected="selected"' : '')?>> web </option>
+							<option value="crypto"<?=(isset($_GET["task_type"]) && $_GET["task_type"]=='crypto' ? ' selected="selected"' : '')?>> crypto </option>
+							<option value="прочее"<?=(isset($_GET["task_type"]) && $_GET["task_type"]=='прочее' ? ' selected="selected"' : '')?>> прочее </option>
 						</select>
 					</div>
 						<? if ($api->Managers->man_block == 1 || $api->Managers->man_block == 2 || $api->Managers->man_block == 5) { ?>
-					<?php /*?><div class="mb-1 col-sm-12 col-md-2 mt-1">
-						<select id="exam" class="form-control form-control-sm" onchange="chooseExam()" style="margin:3px 0 0">
-							<option value="-1"> досмотрщики </option>															
-							<option value="1"<?=(isset($_GET["exam"]) && intval($_GET["exam"])==1 ? ' selected="selected"' : '')?>> все взятые </option>
-							<option value="0"<?=(isset($_GET["exam"]) && intval($_GET["exam"])==0 ? ' selected="selected"' : '')?>> без досмотрщика </option>
-							<? foreach($exams as $k=>$v) { ?>
-							<option value="<?=$k?>"<?=(isset($_GET["exam"]) && intval($_GET["exam"])==$k ? ' selected="selected"' : '')?>> <?=$v?> </option>
-							<? }?>
-						</select>
-					</div><?php */?>
 					<div class="mb-1 col-sm-12 col-md-2 mt-1">
 						<select id="level" class="form-control form-control-sm" onchange="chooseBroker()" style="margin:3px 0 0">
 							<option value=""> все сложности </option>															
-							<option value="1"<?=(isset($_GET["level"]) && intval($_GET["level"])==1 ? ' selected="selected"' : '')?>> easy </option>
-							<option value="2"<?=(isset($_GET["level"]) && intval($_GET["level"])==2 ? ' selected="selected"' : '')?>> medium </option>
-							<option value="3"<?=(isset($_GET["level"]) && intval($_GET["level"])==3 ? ' selected="selected"' : '')?>> hard </option>
+							<option value="easy"<?=(isset($_GET["level"]) && $_GET["level"]=='easy' ? ' selected="selected"' : '')?>> easy </option>
+							<option value="medium"<?=(isset($_GET["level"]) && $_GET["level"]=='medium' ? ' selected="selected"' : '')?>> medium </option>
+							<option value="hard"<?=(isset($_GET["level"]) && $_GET["level"]=='hard' ? ' selected="selected"' : '')?>> hard </option>
 						</select>
 					</div>
 						<? } ?>											
@@ -202,7 +168,7 @@ if ($api->Managers->check_auth() == true)
 						<input type="text" onKeyDown="funcSearch(event);" placeholder="поиск по названию задачи..." value="<?=$api->Strings->pr(isset($_GET["search"]))?>" id="search" class="form-control form-control-sm" />
 						<a class="btn btn-link search_bt" onclick="getSearch()"><i class="fas fa-search"></i></a>
 					</div>	
-						<? if (isset($_GET["task_type"]) || isset($_GET["exam"]) || isset($_GET["broker"]) || isset($_GET["search"]) || isset($_GET["dateSS"]) || isset($_GET["dateDD"])) { ?>
+						<? if (isset($_GET["task_type"]) || isset($_GET["level"]) || isset($_GET["search"])) { ?>
 					<div class="mb-1 col-sm-12 col-md-1 mt-1">		
 						<a data-toggle="tooltip" title="" class="btn btn-link btn-danger btn-lg sbros" data-original-title="Сбросить фильтры" href="<?=$php_self?>">
 							<i class="fas fa-recycle"></i>
@@ -212,6 +178,7 @@ if ($api->Managers->check_auth() == true)
 				</div>
 			</div>
 		</div>
+		
 
 		<div class="card">
 			<div class="card-body" style="position:relative" id="width_body">				
@@ -248,40 +215,44 @@ if ($api->Managers->check_auth() == true)
 					
 					if ($api->Managers->man_block == 1 || $api->Managers->man_block == 2 || $api->Managers->man_block == 5)
 					{
+						// Loop through all $_GET parameters
+
 						// выбор досмотрщика
-						if (isset($_GET["exam"]) && intval($_GET["exam"])==1)
-							$sql_wh = " AND (`id_exam` > 0 AND `id_exam` IS NOT NULL)";
-						else if (isset($_GET["exam"]) && intval($_GET["exam"])==0)
-							$sql_wh = " AND (`id_exam`=0 OR `id_exam` IS NULL)";
-						else if (isset($_GET["exam"]) && intval($_GET["exam"]) > 1)
-							$sql_wh = " AND `id_exam`='".intval($_GET["exam"])."'";
+						// if (isset($_GET["category"]) && intval($_GET["category"])==1)
+						// 	$sql_wh = " AND (`id_exam` > 0 AND `id_exam` IS NOT NULL)";
+						// else if (isset($_GET["exam"]) && intval($_GET["exam"])==0)
+						// 	$sql_wh = " AND (`id_exam`=0 OR `id_exam` IS NULL)";
+						// else if (isset($_GET["exam"]) && intval($_GET["exam"]) > 1)
+						// 	$sql_wh = " AND `id_exam`='".intval($_GET["exam"])."'";
 						
-						if (isset($_GET["broker"]) && intval($_GET["broker"]) > 0)
-							$sql_wh .= " AND `id_broker`='".intval($_GET["broker"])."'";
+						// if (isset($_GET["level"]) && intval($_GET["level"]) > 0)
+						// 	$sql_wh .= " AND `level`='".intval($_GET["level"])."'";
+						if (isset($_GET["level"]))
+							$sql_wh .= " AND `level`='".$_GET["level"]."'";
 					}
 		
-					if ($api->Managers->man_block == 2)					
-						$sql_wh .= " AND (`task_type`=1 OR ( (`task_type`=2 OR `task_type`=3 OR `task_type`=4) AND `id_man`='".$api->Managers->man_id."') )";											
-					else if ($api->Managers->man_block == 3)
-						//$sql_wh = " AND ( ( (`task_type`=1 OR `task_type`=2) AND (`id_exam`='".$api->Managers->man_id."' OR `id_exam`=0 OR `id_exam` IS NULL) ) OR ( (`task_type`=3 OR `task_type`=4) AND `id_exam`='".$api->Managers->man_id."') )";
-						$sql_wh = " AND `id_exam`='".$api->Managers->man_id."'";
-					else if ($api->Managers->man_block == 4)
-						$sql_wh = " AND `id_broker`='".$api->Managers->man_id."'";
+					// if ($api->Managers->man_block == 2)					
+					// 	$sql_wh .= " AND (`task_type`=1 OR ( (`task_type`=2 OR `task_type`=3 OR `task_type`=4)) )";											
+					// else if ($api->Managers->man_block == 3)
+					// 	//$sql_wh = " AND ( ( (`task_type`=1 OR `task_type`=2) AND (`id_exam`='".$api->Managers->man_id."' OR `id_exam`=0 OR `id_exam` IS NULL) ) OR ( (`task_type`=3 OR `task_type`=4) AND `id_exam`='".$api->Managers->man_id."') )";
+					// 	$sql_wh = " AND `id_exam`='".$api->Managers->man_id."'";
+						
+					// else if ($api->Managers->man_block == 4)
+					// 	$sql_wh = " AND `id_broker`='".$api->Managers->man_id."'";
 		
 					$order_name = '';
 					$by_name = '';
 					$order_by = "`create_date` DESC, `id` DESC";
-		
-					if (isset($_GET["dateSS"]) || isset($_GET["dateDD"]))
-						$order_by = "`date_issue` ASC, `create_date` DESC, `id` DESC";
 
 					$i=1;
 					$per_page = 100;
 					$sql_ = "FROM `i_order` WHERE `id` IS NOT NULL".$sql_get.$sql_wh;
 					$api->Pag->setvars($lang, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], mysql_result(mysql_query("SELECT COUNT('id') ".$sql_), 0), $per_page, @$_GET['p']);
 					if (!empty($_GET['p'])) {$start=$_GET['p'];} else {$start=1; $_GET["p"]=1;}
+					// Loop through all $_GET parameters
+
 					$sql_query = "SELECT * ".$sql_." ORDER BY ".$order_by." LIMIT ".$api->Pag->start_from.", ".$per_page."";
-		
+			
 					$s=mysql_query($sql_query);
 					if (mysql_num_rows($s) > 0)
 					{
@@ -302,29 +273,57 @@ if ($api->Managers->check_auth() == true)
 						<?
 						while($r=mysql_fetch_array($s))
 						{							
-							$link = '';				
-							$link = ' style="cursor:pointer;" onclick="location.href=\'more.php?id='.$r["id"].'\'"';
+							$link = '';							
+							$link = ' style="cursor:pointer;" onclick="location.href=\'more.php?edit='.$r["id"].'\'"';
 							$task_name = $r["task_name"];
 							$date = $api->Strings->date($lang,$r["create_date"],'sql','datetime');
 							$points = intval($r["points"]);
 							$level = $r["level"];
 							// $date_issue = $api->Strings->date($lang,$r["date_issue"],'sql','date');
 							
-							$task_type = ''; $class_st = '';
+							$task_type = ''; $class_st = ''; $class_lvl = '';
 							switch ($r["task_type"]) {
 								case 'crypto':
-									$task_type = 'crypto'; $class_st = 'appr';
+									$task_type = 'crypto'; $class_st = 'new';
 									break;
 								case 'stegano':
-									$task_type = 'stegano'; $class_st = 'new';
+									$task_type = 'stegano'; $class_st = 'appr';
 									break;
 								case 'web':
 									$task_type = 'web'; $class_st = 'work';
 									break;
 								case 'прочее':
-									$task_type = 'прочее'; $class_st = 'work';
+									$task_type = 'прочее'; $class_st = 'change';
 									break;
 							}
+							switch ($r["level"]) {
+								case 'easy':
+									$level = 'easy'; $class_lvl = 'done';
+									break;
+								case 'medium':
+									$level = 'medium'; $class_lvl = 'appr';
+									break;
+								case 'hard':
+									$level = 'hard'; $class_lvl = 'new';
+									break;
+							}
+							
+							// switch (intval($r["status"])) {
+							// 	case 0:
+							// 		$status = 'на одобрении'; $class_st = 'appr';
+							// 		break;
+							// 	case 1:
+							// 		$status = 'новая'; $class_st = 'new';
+							// 		break;
+							// 	case 2:
+							// 		$status = 'в работе'; $class_st = 'work';
+							// 		break;
+							// 	case 3:
+							// 		$status = 'готова'; $class_st = 'done';
+							// 		break;
+							// 	case 4:
+							// 		$status = 'изменено'; $class_st = 'change';
+							// 		break;
 							
 							// $status2 = ''; $class_st2 = '';
 							// switch (intval($r["status2"])) {
