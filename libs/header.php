@@ -47,6 +47,7 @@ if (
 			$_SERVER['PHP_SELF'] == '/order/index.php' ||
 			$_SERVER['PHP_SELF'] == '/order/fresh.php' ||
 			$_SERVER['PHP_SELF'] == '/basket/index.php' ||
+			$_SERVER['PHP_SELF'] == '/profile/index.php' ||
 			$_SERVER['PHP_SELF'] == '/settings/baza/index.php'
 		)
 	)
@@ -78,6 +79,14 @@ if (
             <div class="sidebar-content">                
                 <ul class="nav nav-warning">    
                 	<? if ($api->Managers->check_auth() == true) { ?>
+                        <? if ($api->Managers->man_block == 3) { ?>
+					<li class="nav-item<?=($_SERVER["PHP_SELF"] == '/profile/index.php' ? ' active' : '')?>">
+                        <a href="/profile/index.php">
+                            <i class="fas fa-briefcase"></i>
+                            <p>Мой профиль</p>								
+                        </a>							
+                    </li>
+						<? } ?>
 						<? if (
 								$api->Managers->man_block == 1 || $api->Managers->man_block == 2 || $api->Managers->man_block == 5 ||							
 								$api->Managers->man_block == 4
