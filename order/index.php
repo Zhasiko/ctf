@@ -14,12 +14,13 @@ if ($api->Managers->check_auth() == true)
 		$api->Managers->man_block == 4 // брокер
 	)
 	{		
+		$user_id = $api->Managers->man_id;
 		$php_self = '/order/';
 		$get_type = '?'.preg_replace('#(^|&)task_type=[0-9]+(|$)#', '', $_SERVER['QUERY_STRING']);
 		$get_level = '?'.preg_replace('#(^|&)level=[0-9]+(|$)#', '', $_SERVER['QUERY_STRING']);
 		
 		$sql_get = "";
-
+		
 		if (isset($_GET["search"]) && $_GET["search"] != '')
 			$sql_get .= " AND (INSTR(`task_name`, '".$api->Strings->pr($_GET["search"])."'))";
 		
@@ -41,7 +42,8 @@ if ($api->Managers->check_auth() == true)
 			}
 
 			.card-body {
-				color: white;;
+				color: white;
+				
 				background-color: #021b3b;; 
 			}
 
@@ -54,6 +56,8 @@ if ($api->Managers->check_auth() == true)
 			.form-control {
 				background-color: #a1a398; 
 			}
+
+			
 
 		</style>
 		<div class="card">
@@ -170,6 +174,11 @@ if ($api->Managers->check_auth() == true)
 									<th>Категория</th>																									
 									<th>Балл</th>
 									<th>Сложность</th>
+									<?
+										if($api->Managers->man_block == 3){ ?>
+											<th>Статус</th>
+										<? } ?>
+									?>
 								</tr>
 							</thead>
 						<?
@@ -199,13 +208,18 @@ if ($api->Managers->check_auth() == true)
 							}
 							
 							?>
-							<tr role="row" class="<?=(($i%2)==1 ? 'odd' : 'even')?>">																
+							<tr role="row" class="<?=(($i%2)==1 ? 'odd' : 'even')?>" style="height: 30px; @media screen and (max-width: 767px) { height: auto; }; ">																
 								<td<?=$link?> nowrap="nowrap"><?=$r["id"]?></td>
 								<td<?=$link?> nowrap="nowrap"><?=$date?></td>
 								<td<?=$link?> nowrap="nowrap"><?=$task_name?></td>	
 								<td<?=$link?> nowrap="nowrap" class="<?=$class_st?>"><?=$task_type?></td>
 								<td<?=$link?> nowrap="nowrap"><?=$points?></td>
 								<td<?=$link?> nowrap="nowrap"><?=$level?></td>
+								<?
+									if (($r["id"] != '') && ($user_id != '') && (mysql_num_rows(mysql_query("SELECT `id` FROM `i_solved` WHERE `task_id`='".$r["id"]."' AND `user_id`='".$user_id."' LIMIT 1")) == 1)){ ?>
+										<td<?=$link?> nowrap="nowrap"><?="✅"?></td>
+									<? }
+								?>
 							</tr>
 							<?
 							$i++;

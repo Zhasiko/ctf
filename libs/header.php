@@ -82,6 +82,8 @@ if (
 								$api->Managers->man_block == 1 || $api->Managers->man_block == 2 || $api->Managers->man_block == 5 ||							
 								$api->Managers->man_block == 4
 						) { ?>
+
+                    
 					<li class="nav-item<?=($_SERVER["PHP_SELF"] == '/order/add.php' ? ' active' : '')?>">
                         <a href="/order/add.php">
                             <i class="fas fa-briefcase"></i>
@@ -89,14 +91,7 @@ if (
                         </a>							
                     </li>
 						<? } ?>
-						<? if ($api->Managers->man_block == 3) { ?>
-					<li class="nav-item<?=($_SERVER["PHP_SELF"] == '/order/fresh.php' ? ' active' : '')?>">
-                        <a href="/order/fresh.php">
-                            <i class="fas fa-briefcase"></i>
-                            <p>Новые заявки</p>								
-                        </a>							
-                    </li>
-						<? } ?>
+						
                     <li class="nav-item<?=(substr($_SERVER["PHP_SELF"], 0, 7) == '/order/' && $_SERVER["PHP_SELF"] != '/order/add.php' && $_SERVER["PHP_SELF"] != '/order/fresh.php' ? ' active' : '')?>">
                         <a href="/order/">
                             <i class="fas fa-laptop-code"></i>
@@ -159,12 +154,17 @@ if (
                     	<hr />
                     </li>                                         
                         <? } ?> -->
+                        <? if (
+								$api->Managers->man_block == 1 || $api->Managers->man_block == 2 || $api->Managers->man_block == 5 ||							
+								$api->Managers->man_block == 4
+						) { ?>
                     <li class="nav-item<?=($_SERVER["PHP_SELF"] == '/settings/change.php' ? ' active' : '')?>">
                         <a href="/settings/change.php">
                             <i class="fas fa-cogs"></i>
                             <p>Изменить пароль</p>
                         </a>
                     </li>
+                    <? } ?>
                     <li class="nav-item">
                         <a class="logout_btn">
                             <i class="icon-logout"></i>

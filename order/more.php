@@ -14,7 +14,9 @@ if ($api->Managers->check_auth() == true) {
         ) &&
         (isset($_GET["id"]) && intval($_GET["id"]) != 0)
     ) {
-
+		$user_id = $api->Managers->man_id;
+		// echo $user_id;
+		// echo "hello";
         $sql_wh = "";
         // if ($api->Managers->man_block == 2)
         //     $sql_wh = " AND (`status`=1 OR ( (`status`=2 OR `status`=3 OR `status`=4) AND `id_man`='" . $api->Managers->man_id . "') )";
@@ -213,10 +215,19 @@ if ($api->Managers->check_auth() == true) {
                                 // Get user input
                                 var userFlag = $('#user-flag').val().trim();
                                 var flag = '<?php echo $flag; ?>'; // Fetch flag from PHP
-
+								
                                 // Compare flags
                                 if (userFlag === flag.trim()) {
                                     $('#flag-result').html('<p style="color: green; font-size: 20px;">You solved this task!</p>');
+									<?php 
+									
+									// echo $user_id;
+									if (($id != '') && ($user_id != '') && (mysql_num_rows(mysql_query("SELECT `id` FROM `i_solved` WHERE `task_id`='".$id."' AND `user_id`='".$user_id."' LIMIT 1")) == 0)){
+										$sql_insert = "INSERT INTO `i_solved` (`task_id`, `user_id`) VALUES ('".$id."', '".$user_id."')";
+										$insert = mysql_query($sql_insert);		
+									}
+									
+									?>
                                 } else {
                                     $('#flag-result').html('<p style="color: red; font-size: 20px;">Incorrect flag. Please try again.</p>');
                                 }
@@ -422,24 +433,7 @@ if ($api->Managers->check_auth() == true) {
 					</form>
                     <div id="flag-result"></div>
 
-                    <script>
-                        $(document).ready(function() {
-                            $('#flag-form').on('submit', function(e) {
-                                e.preventDefault(); // Prevent form submission
-
-                                // Get user input
-                                var userFlag = $('#user-flag').val().trim();
-                                var flag = '<?php echo $flag; ?>'; // Fetch flag from PHP
-
-                                // Compare flags
-                                if (userFlag === flag.trim()) {
-                                    $('#flag-result').html('<p style="color: green; font-size: 20px;">You solved this task!</p>');
-                                } else {
-                                    $('#flag-result').html('<p style="color: red; font-size: 20px;">Incorrect flag. Please try again.</p>');
-                                }
-                            });
-                        });
-                    </script>
+                
                 </div>
 
             </body>
