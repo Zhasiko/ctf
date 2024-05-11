@@ -18,8 +18,10 @@ if ($api->Managers->check_auth() == true)
 		$php_self = '/order/';
 		$get_type = '?'.preg_replace('#(^|&)task_type=[0-9]+(|$)#', '', $_SERVER['QUERY_STRING']);
 		$get_level = '?'.preg_replace('#(^|&)level=[0-9]+(|$)#', '', $_SERVER['QUERY_STRING']);
+		$get_solved = '?'.preg_replace('#(^|&)solved=[0-9]+(|$)#', '', $_SERVER['QUERY_STRING']);
 		
 		$sql_get = "";
+		$sql_solved = "";
 		
 		if (isset($_GET["search"]) && $_GET["search"] != '')
 			$sql_get .= " AND (INSTR(`task_name`, '".$api->Strings->pr($_GET["search"])."'))";
@@ -27,6 +29,17 @@ if ($api->Managers->check_auth() == true)
 		if (isset($_GET["task_type"])){	
 			if($_GET["task_type"] != 'all'){
 				$sql_get .= " AND `task_type`='".$_GET["task_type"]."'";
+			}
+		}	
+		if (isset($_GET["solved"])){	
+			if($_GET["solved"] != 'all'){
+				$sub_query = "SELECT `task_id` FROM `i_solved` WHERE `user_id` = ".$api->Managers->man_id;
+				if($_GET["solved"] == 'решенные'){
+					$sql_solved .= " AND `id` IN (".$sub_query.")";
+				}
+				else if($_GET["solved"] == 'нерешенные'){
+					$sql_solved .= " AND `id` NOT IN (".$sub_query.")";
+				}
 			}
 		}	
 		
@@ -95,6 +108,12 @@ if ($api->Managers->check_auth() == true)
 						else
 							setTimeout(function() { self.location = "<?=$php_self.($get_level!='?' ? $get_level : '')?>"; }, 50);
 					}	
+					function chooseSolved() {
+						if (jQuery("#solved").val() != '')
+							setTimeout(function() { self.location = "<?=$php_self.$get_solved.($get_solved!='' && $get_solved!='?' ? '&' : '')?>solved="+jQuery("#solved").val(); }, 50);
+						else
+							setTimeout(function() { self.location = "<?=$php_self.($get_solved!='?' ? $get_solved : '')?>"; }, 50);
+					}	
 					
 
 				</script>
@@ -116,11 +135,18 @@ if ($api->Managers->check_auth() == true)
 							<option value="hard"<?=(isset($_GET["level"]) && $_GET["level"]=='hard' ? ' selected="selected"' : '')?>> hard </option>
 						</select>
 					</div>
+					<div class="mb-1 col-sm-12 col-md-2 mt-1">
+						<select id="solved" class="form-control form-control-sm" onchange="chooseSolved()" style="margin:3px 0 0">
+							<option value="all"> все задачи </option>															
+							<option value="решенные"<?=(isset($_GET["solved"]) && $_GET["solved"]=='решенные' ? ' selected="selected"' : '')?>> решенные </option>
+							<option value="нерешенные"<?=(isset($_GET["solved"]) && $_GET["solved"]=='нерешенные' ? ' selected="selected"' : '')?>> нерешенные </option>
+						</select>
+					</div>
 					<div class="mb-1 col-sm-12 col-md-3 mt-1">
 						<input type="text" onKeyDown="funcSearch(event);" placeholder="поиск по названию задачи..." value="<?=$api->Strings->pr(isset($_GET["search"]))?>" id="search" class="form-control form-control-sm" />
 						<a class="btn btn-link search_bt" onclick="getSearch()"><i class="fas fa-search"></i></a>
 					</div>	
-						<? if (isset($_GET["task_type"]) || isset($_GET["level"]) || isset($_GET["search"])) { ?>
+						<? if (isset($_GET["task_type"]) || isset($_GET["level"]) || isset($_GET["search"]) || (isset($_GET["solved"]))) { ?>
 					<div class="mb-1 col-sm-12 col-md-1 mt-1">		
 						<a data-toggle="tooltip" title="" class="btn btn-link btn-danger btn-lg sbros" data-original-title="Сбросить фильтры" href="<?=$php_self?>">
 							<i class="fas fa-recycle"></i>
@@ -154,7 +180,7 @@ if ($api->Managers->check_auth() == true)
 
 					$i=1;
 					$per_page = 100;
-					$sql_ = "FROM `i_order` WHERE `id` IS NOT NULL".$sql_get.$sql_wh;
+					$sql_ = "FROM `i_order` WHERE `id` IS NOT NULL".$sql_solved.$sql_get.$sql_wh;
 					$api->Pag->setvars($lang, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], mysql_result(mysql_query("SELECT COUNT('id') ".$sql_), 0), $per_page, @$_GET['p']);
 					if (!empty($_GET['p'])) {$start=$_GET['p'];} else {$start=1; $_GET["p"]=1;}
 
@@ -178,7 +204,7 @@ if ($api->Managers->check_auth() == true)
 										if($api->Managers->man_block == 3){ ?>
 											<th>Статус</th>
 										<? } ?>
-									
+									?>
 								</tr>
 							</thead>
 						<?
