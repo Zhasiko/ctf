@@ -82,7 +82,7 @@ if (
                         <? if ($api->Managers->man_block == 3) { ?>
 					<li class="nav-item<?=($_SERVER["PHP_SELF"] == '/profile/index.php' ? ' active' : '')?>">
                         <a href="/profile/index.php">
-                            <i class="fas fa-briefcase"></i>
+                            <i class="fas fa-user-circle"></i>
                             <p>Мой профиль</p>								
                         </a>							
                     </li>
@@ -116,17 +116,49 @@ if (
                     </li>
 						<? } ?> -->
                     <? } ?>
+
+                    <?
+                    $current_page = basename($_SERVER["PHP_SELF"]);
+
+                    $active_class = '';
+                    if ($current_page == 'students.php') {
+                        $active_class = 'active';
+                    }
+                    ?>
+                    
+                    <li class="nav-item <?= $active_class ?>">
+                        <a href="/staff/students.php">
+                            <i class="fas fa-user-graduate"></i>
+                            <p>Список студентов</p>
+                        </a>
+                    </li>
+
+                    
 					<li class="nav-item">
                     	<hr />
                     </li>
                    		<? if ($api->Managers->man_block == 1) { ?>
-                    <li class="nav-item<?=(substr($_SERVER["PHP_SELF"], 0, 7) == '/staff/' ? ' active' : '')?>">
+
+                    <?
+                    $current_page = basename($_SERVER["PHP_SELF"]);
+                    $current_uri = $_SERVER['REQUEST_URI'];
+                    $active_class = '';
+                    if ($current_uri === '/staff/' || $current_uri === '/staff/index.php') {
+                        $active_class = 'active';
+                    }
+
+                    ?>
+
+                    <li class="nav-item <?= $active_class ?>">
                         <a href="/staff/">
                             <i class="fas fa-user-graduate"></i>
                             <p>Пользователи</p>
                         </a>
                     </li>
 						<? } ?> 
+                       
+
+						
 						<!-- <? if ($api->Managers->man_block == 1 || $api->Managers->man_block == 2 || $api->Managers->man_block == 5) { ?> -->
 					<!-- <li class="nav-item<?=(substr($_SERVER["PHP_SELF"], 0, 10) == '/settings/' ? ' active submenu' : '')?>">
                         <a data-toggle="collapse" href="#settings">

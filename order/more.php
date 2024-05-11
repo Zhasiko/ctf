@@ -223,8 +223,12 @@ if ($api->Managers->check_auth() == true) {
 									
 									// echo $user_id;
 									if (($id != '') && ($user_id != '') && (mysql_num_rows(mysql_query("SELECT `id` FROM `i_solved` WHERE `task_id`='".$id."' AND `user_id`='".$user_id."' LIMIT 1")) == 0)){
+                                        
 										$sql_insert = "INSERT INTO `i_solved` (`task_id`, `user_id`) VALUES ('".$id."', '".$user_id."')";
 										$insert = mysql_query($sql_insert);		
+
+                                        $sql_update = "UPDATE `i_manager_users` SET `points`= `points` + '".$points."', `task_amount`= `task_amount` + 1 WHERE `id`='".$user_id."'";
+                                        $update = mysql_query($sql_update);
 									}
 									
 									?>
