@@ -28,6 +28,7 @@ if (
         if (mysql_num_rows($s) > 0) {
             $r = mysql_fetch_array($s);
             $flag = $r["flag"];
+            $points = $r["points"];
             $correctFlag = trim($flag);
         }
         
