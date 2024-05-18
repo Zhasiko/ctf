@@ -8,7 +8,7 @@
         </div>
 		<style>
 			.footer {
-						background-color: #21232c; /* Цвет фона */
+						background-color: #0d1b2a; /* Цвет фона */
 					}
 		</style>
         <? if ($api->Managers->check_auth() == true) { ?>

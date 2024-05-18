@@ -48,7 +48,8 @@ if (
 			$_SERVER['PHP_SELF'] == '/order/fresh.php' ||
 			$_SERVER['PHP_SELF'] == '/basket/index.php' ||
 			$_SERVER['PHP_SELF'] == '/profile/index.php' ||
-			$_SERVER['PHP_SELF'] == '/settings/baza/index.php'
+			$_SERVER['PHP_SELF'] == '/settings/baza/index.php' ||
+			$_SERVER['PHP_SELF'] == '/stat/index.php'
 		)
 	)
 )
@@ -131,6 +132,13 @@ if (
                             <i class="fas fa-user-graduate"></i>
                             <p>Список студентов</p>
                         </a>
+                    </li>
+
+                    <li class="nav-item<?=($_SERVER["PHP_SELF"] == '/stat/index.php' ? ' active' : '')?>">
+                        <a href="/stat/index.php">
+                        <i class="fas fa-chart-area"></i>
+                            <p>Статистика</p>								
+                        </a>							
                     </li>
 
                     <li class="nav-item<?=(substr($_SERVER["PHP_SELF"], 0, 7) == '/events/' ? ' active' : '')?>">

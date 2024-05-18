@@ -12,7 +12,7 @@ if ($api->Managers->check_auth() == true)
         <style>
             
            body {
-                background-color: #21232c; /* Цвет фона */
+                background-color: #0d1b2a; /* Цвет фона */
             }
             .card {
                 background-color: #1a2035; /* Цвет фона */

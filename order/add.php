@@ -210,7 +210,7 @@ if ($api->Managers->check_auth() == true)
 			?>                
             <style>
 				body {
-					background-color: #21232c;
+					background-color: #0d1b2a;
 				}
 
 				.card {
