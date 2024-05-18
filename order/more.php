@@ -17,7 +17,7 @@ if ($api->Managers->check_auth() == true) {
 		$user_id = $api->Managers->man_id;
 		// echo $user_id;
 		// echo "hello";
-        $sql_wh = "";
+        
         // if ($api->Managers->man_block == 2)
         //     $sql_wh = " AND (`status`=1 OR ( (`status`=2 OR `status`=3 OR `status`=4) AND `id_man`='" . $api->Managers->man_id . "') )";
         // else if ($api->Managers->man_block == 3)
@@ -27,7 +27,7 @@ if ($api->Managers->check_auth() == true) {
 
         $id = intval($_GET["id"]);
 		
-        $s = mysql_query("SELECT * FROM `i_order` WHERE `id`='" . $id . "'" . $sql_wh . " LIMIT 1");
+        $s = mysql_query("SELECT * FROM `i_order` WHERE `id`='" . $id . "'" . " LIMIT 1");
 		// echo $s;
         if (mysql_num_rows($s) > 0) {
             $r = mysql_fetch_array($s);
@@ -38,7 +38,7 @@ if ($api->Managers->check_auth() == true) {
             $description = $r["description"];
             $points = $r["points"];
             $flag = $r["flag"];
-            $task_type = $r["task_name"];
+            $task_type = $r["task_type"];
             $level = $r["level"];
             $solving_avg = $r["solving_avg"];
 		?>
@@ -199,44 +199,70 @@ if ($api->Managers->check_auth() == true) {
                         <?php echo $description; ?>
                     </div>
 
-                    <a href="<?php echo $link; ?>" class="button button-start" target="_blank">Start the Challenge</a> <!-- Open link in a new tab -->
+                    <div class="form-group form-show-validation row">
+                        <a href="<?php echo $link; ?>" class="button button-start" target="_blank">Start the Challenge</a>
+                    </div>
+                    
+                    <div class="form-group form-show-validation row">
+                        <div class="">
+                            <input type="text" class="form-control" id="user-flag" placeholder="Enter the Flag" style="width: 300%"/>
+                            <span class="control__help" id="error_check"></span>
+                        </div>
+                    </div>
 
-                    <form id="flag-form" action="" method="post">
-                        <input type="text" id="user-flag" name="user_flag" placeholder="Enter Flag" class="input-field">
-                        <button type="submit" id="submit-flag" class="submit-button">Submit</button>
+                    <div class="form-group form-show-validation row">
+                        <button type="submit" id="submit-flag" onclick="checkTask()" class="submit-button">Submit</button>
+                        
+                    </div>
+                    <div id="protocol"></div>
+                    <!-- <form id="flag-form" action="action">
+                        <input type="text" id="user-flag" name="user-flag" placeholder="Enter the Flag" class="input-field">
+                        <span class="control__help" id="error_check"></span>
+                        <button type="submit" id="submit-flag" onclick="checkTask()" class="submit-button">Submit</button>
                     </form>
-                    <div id="flag-result"></div>
+                    <div id="flag-result"></div> -->
 
                     <script>
-                        $(document).ready(function() {
-                            $('#flag-form').on('submit', function(e) {
-                                e.preventDefault(); // Prevent form submission
+                        function checkTask(){
+                            var err_key = 0;
+                            var focused = 0;
 
-                                // Get user input
-                                var userFlag = $('#user-flag').val().trim();
-                                var flag = '<?php echo $flag; ?>'; // Fetch flag from PHP
-								
-                                // Compare flags
-                                if (userFlag === flag.trim()) {
-                                    $('#flag-result').html('<p style="color: green; font-size: 20px;">You solved this task!</p>');
-									<?php 
-									
-									// echo $user_id;
-									if (($id != '') && ($user_id != '') && (mysql_num_rows(mysql_query("SELECT `id` FROM `i_solved` WHERE `task_id`='".$id."' AND `user_id`='".$user_id."' LIMIT 1")) == 0)){
-                                        
-										$sql_insert = "INSERT INTO `i_solved` (`task_id`, `user_id`) VALUES ('".$id."', '".$user_id."')";
-										$insert = mysql_query($sql_insert);		
+                            var id = '<?php echo $id; ?>';
+                            var user_id = '<?php echo $user_id; ?>';
+                            var category = '<?php echo $task_type; ?>';
 
-                                        $sql_update = "UPDATE `i_manager_users` SET `points`= `points` + '".$points."', `task_amount`= `task_amount` + 1 WHERE `id`='".$user_id."'";
-                                        $update = mysql_query($sql_update);
-									}
-									
-									?>
-                                } else {
-                                    $('#flag-result').html('<p style="color: red; font-size: 20px;">Incorrect flag. Please try again.</p>');
-                                }
-                            });
-                        });
+
+                            
+                            jQuery(".control__help").html('').hide();
+
+                            if (jQuery("#user-flag").val() == '')
+                            {
+                                err_key = 1;
+                                jQuery("#user-flag").css("border-color", "#f00");
+                                jQuery("#error_check").html('Флаг не может быть пустым').css("display", "inline-block");
+                                if (focused == 0) { jQuery("#user-flag").focus(); focused = 1; }
+                            }
+                            
+                            // var data = "id=" + id + "&user_id=" + user_id + "&flag="+jQuery("#user-flag").val() + "&category=" + category +"&x=secure"
+                            // console.log(data);
+                            if (err_key == 0)
+                            
+                            {
+                                jQuery.ajax(
+                                {
+                                    url: "check_task.php",
+                                    data: "id=" + id + "&user_id=" + user_id + "&user_flag="+jQuery("#user-flag").val() + "&category=" + category +"&x=secure",
+                                    type: "POST",
+                                    dataType : "html",
+                                    cache: false,
+
+                                    beforeSend: function()		{ jQuery("#protocol").html(""); jQuery(".action").hide(); jQuery(".loading").show(); },
+                                    success:  function(data)	{ jQuery("#protocol").html(data); <?php /*?>jQuery(".action").show();<?php */?> jQuery(".loading").hide(); },
+                                    error: function()			{ alert("Невозможно связаться с сервером"); jQuery(".action").show(); jQuery(".loading").hide(); }
+                                });
+                            }
+                        }
+                        
                     </script>
                 </div>
 
@@ -268,7 +294,7 @@ if ($api->Managers->check_auth() == true) {
             $description = $r["description"];
             $points = $r["points"];
             $flag = $r["flag"];
-            $task_type = $r["task_name"];
+            $task_type = $r["task_type"];
             $level = $r["level"];
             $solving_avg = $r["solving_avg"];
 		?>

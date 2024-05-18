@@ -133,7 +133,13 @@ if (
                         </a>
                     </li>
 
-                    
+                    <li class="nav-item<?=(substr($_SERVER["PHP_SELF"], 0, 7) == '/events/' ? ' active' : '')?>">
+                        <a href="/events/">
+                            <i class="fas fa-bullhorn"></i>
+                            <p>События</p>
+                        </a>
+                    </li>   
+
 					<li class="nav-item">
                     	<hr />
                     </li>
@@ -233,14 +239,18 @@ if (
                         <?  
 						if ($api->Managers->man_block == 1)
                         {                       
-	                        if (substr($_SERVER["PHP_SELF"], 0, 7) == '/staff/' && $_SERVER["PHP_SELF"] != '/staff/add.php')
+	                        if (substr($_SERVER["PHP_SELF"], 0, 7) == '/staff/' && $_SERVER["PHP_SELF"] != '/staff/add.php' && $_SERVER["PHP_SELF"] != '/staff/students.php')
 								echo '<a class="btn btn-primary btn-round'.($api->Strings->check_smartphone() == true ? ' mt-3' : '').'" href="add.php">Добавить пользователя</a>';
 						}
-						
+                        if ($api->Managers->man_block == 1)
+                        {                       
+	                        if (substr($_SERVER["PHP_SELF"], 0, 8) == '/events/' && $_SERVER["PHP_SELF"] != '/events/add.php')
+								echo '<a class="btn btn-primary btn-round'.($api->Strings->check_smartphone() == true ? ' mt-3' : '').'" href="add.php">Добавить cобытие</a>';
+						}
 						if (
 							$api->Managers->man_block == 1 || 
-							$api->Managers->man_block == 2 || 
-							$api->Managers->man_block == 5
+							$api->Managers->man_block == 2 
+	
 						) {
 							
 							// if ($_SERVER["PHP_SELF"] == '/order/index.php')

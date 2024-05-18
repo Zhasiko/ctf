@@ -204,7 +204,7 @@ if ($api->Managers->check_auth() == true)
 										if($api->Managers->man_block == 3){ ?>
 											<th>Статус</th>
 										<? } ?>
-									?>
+									
 								</tr>
 							</thead>
 						<?
