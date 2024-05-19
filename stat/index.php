@@ -17,6 +17,9 @@ if ($api->Managers->check_auth() == true) {
     $sql_query = "SELECT * FROM `i_solved`";
     $s=mysql_query($sql_query);
     $total_solved = mysql_num_rows($s);
+    $total_solved_user = 0;
+    
+
 
     if ($total_solved > 0)
     {
@@ -34,8 +37,49 @@ if ($api->Managers->check_auth() == true) {
            if($r['category'] == 'прочее'){
                 $etc_solved = $etc_solved + 1;
            }
+           if($r['user_id'] == $user_id){
+            $total_solved_user = $total_solved_user + 1;
+            }
+        }
+        $solved = array(
+            'Стеганография' => $stegano_solved,
+            'Веб' => $web_solved,
+            'Криптография' => $crypto_solved,
+            'Прочее' => $etc_solved
+        );
+        arsort($solved);
+    }
+    $sql_query= "SELECT `task_type`, COUNT(*) AS `count` FROM `i_order` GROUP BY `task_type`";
+    $s=mysql_query($sql_query);
+    while($r=mysql_fetch_array($s))
+    {
+        if($r['task_type'] == 'crypto'){
+            $total_crypto = $r['count'];
+            $procent_crypto = $crypto_solved / $total_crypto * 100;
+        }
+        if($r['task_type'] == 'web'){
+            $total_web = $r['count'];
+            $procent_web = $web_solved / $total_web * 100;
+        }
+        if($r['task_type'] == 'stegano'){
+            $total_stegano = $r['count'];
+            $procent_stegano = $stegano_solved / $total_stegano * 100;
+        }
+        if($r['task_type'] == 'прочее'){
+            $total_etc = $r['count'];
+            $procent_etc = $etc_solved / $total_etc * 100;
         }
     }
+    // Сбор процентов в массив
+    $percentages = array(
+        'Стеганография' => $procent_stegano,
+        'Веб' => $procent_web,
+        'Криптография' => $procent_crypto,
+        'Прочее' => $procent_etc
+    );
+
+    // Сортировка массива по значениям в порядке убывания
+    arsort($percentages);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -63,7 +107,7 @@ if ($api->Managers->check_auth() == true) {
         }
 
         .card {
-            background-color: #2E2E2E;
+            background-color: #2E2E3E;
             border-radius: 10px;
             padding: 20px;
             flex: 1 1 300px;
@@ -71,6 +115,11 @@ if ($api->Managers->check_auth() == true) {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             box-sizing: border-box;
         }
+
+        .card:hover {
+				transform: scale(1.02);
+				box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
+			}
 
         .card h2 {
             margin-top: 0;
@@ -84,6 +133,9 @@ if ($api->Managers->check_auth() == true) {
         .bar-chart, .line-chart, .progress-ring {
             width: 100%;
             height: 200px;
+        }
+        .progress-ring {
+            height: 300px;
         }
 
         .progress-ring-circle {
@@ -124,42 +176,54 @@ if ($api->Managers->check_auth() == true) {
 <body>
     <div class="container">
         <div class="card">
-            <h2>Решенные задачи по категориям</h2>
-            <div class="chart bar-chart">
-                <div class="bar-container">
-                    <div class="bar" style="height: 80%;"></div>
-                    <div class="bar" style="height: 85%;"></div>
-                    <div class="bar" style="height: 90%;"></div>
-                    <div class="bar" style="height: 75%;"></div>
-                </div>
+        <h2>Решенные задачи по категориям</h2>
+        <div class="chart bar-chart">
+            <div class="bar-container" style="margin-top: 50px;"> <!-- Добавляем отступ сверху в 20px -->
+                <?php
+                // Вывод отсортированных значений с процентами и названиями
+                foreach ($percentages as $category => $percentage) {
+                    $height = $percentage + 1;
+                    echo '<div class="bar-wrapper">';
+                    echo '<div class="bar" style="height: ' . $height . 'px;"></div>';
+                    echo '<div class="bar-label">' . round($percentage, 2) . '%</div>'; 
+                    echo '</div>';
+                }
+                ?>
             </div>
-            <p>Top active pages</p>
+        </div>
+
+            <p>Топ решенные категории</p>
             <ul>
-                <li>Стеганография - 230,984</li>
-                <li>Веб - 83,363</li>
-                <li>Криптография - 60,542</li>
-                <li>Прочее - 31,873</li>
+                <?php
+                // Вывод отсортированных значений       
+                foreach ($solved as $category => $count) {
+                    echo "<li>$category - $count</li>";
+                }
+                ?>
             </ul>
         </div>
+            
+        <?php
+            $sql_query= "SELECT * FROM `i_order`";
+            $s=mysql_query($sql_query);
+            $all_tasks_cnt = mysql_num_rows($s);
 
-        <div class="card">
-            <h2>CLASS BY PROGRESS</h2>
-            <svg class="chart progress-ring" width="120" height="120">
-                <circle class="progress-ring-circle" stroke="#32E6B7" stroke-width="4" fill="transparent" r="52" cx="60" cy="60"/>
+            $user_procent = $total_solved_user / $all_tasks_cnt * 100;
+        ?>
+        <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center;"> <!-- Изменяем размер карты на 200x200 пикселей и применяем flex-контейнер -->
+            <h2>% Решенных задач пользователя</h2>
+            <svg class="chart progress-ring" width="200" height="200"> <!-- Изменяем размеры svg -->
+                <circle class="progress-ring-circle" stroke="#32E6B7" stroke-width="20" fill="transparent" r="70" cx="150" cy="150"/> <!-- Изменяем радиус круга и его координаты -->
             </svg>
-            <p>Task is completed 78%</p>
+            <p >Task is completed <?php echo $user_procent?>%</p> <!-- Добавляем отступ сверху в 10px -->
         </div>
-
-        <div class="card">
-            <h2>MINE SOLVED TASKS</h2>
-            <p>309,827</p>
-            <p>74% of total (420,932)</p>
-        </div>
-
+        <?php
+            $avg_solved = $total_solved / $all_tasks_cnt * 100;
+        ?>
         <div class="card">
             <h2>AVE SOLVED TASKS BY USER</h2>
-            <p>150,967.64</p>
-            <p>76% of total (198,050.82)</p>
+            <p><?php echo $total_solved?></p>
+            <p><?php echo $avg_solved. " of total (". $all_tasks_cnt.')'?></p>
         </div>
     </div>
 
@@ -178,7 +242,7 @@ if ($api->Managers->check_auth() == true) {
                 circle.style.strokeDashoffset = offset;
             }
 
-            setProgress(78);
+            setProgress(<?php echo $user_procent; ?>);
         });
     </script>
 </body>
@@ -187,5 +251,5 @@ if ($api->Managers->check_auth() == true) {
 } else {
     require($_SERVER["DOCUMENT_ROOT"] . "/text_noAuth.php");
 }
-require($_SERVER["DOCUMENT_ROOT"] . "/libs/footer.php");
+// require($_SERVER["DOCUMENT_ROOT"] . "/libs/footer.php");
 ?>
