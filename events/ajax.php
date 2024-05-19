@@ -16,7 +16,7 @@ if (
     
 	if (
 		$api->Managers->check_auth() == true &&
-		$api->Managers->man_block == 1
+		$api->Managers->man_block == 1 || $api->Managers->man_block == 2
 	)
 	{
         

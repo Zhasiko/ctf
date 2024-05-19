@@ -13,7 +13,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
 
 if ($api->Managers->check_auth() == true)
 {
-	if ($api->Managers->man_block == 1)
+	if ($api->Managers->man_block == 1 || $api->Managers->man_block == 2)
 	{
 		?>
 		 <style>
@@ -223,7 +223,7 @@ if ($api->Managers->check_auth() == true)
 			{
 				var err_key = 0;
 				var focused = 0;
-				if (confirm("Вы действительно хотите удалить пользователя?"))
+				if (confirm("Вы действительно хотите удалить событие?"))
 				{
 					jQuery.ajax(
 					{

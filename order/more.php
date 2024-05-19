@@ -215,12 +215,7 @@ if ($api->Managers->check_auth() == true) {
                         
                     </div>
                     <div id="protocol"></div>
-                    <!-- <form id="flag-form" action="action">
-                        <input type="text" id="user-flag" name="user-flag" placeholder="Enter the Flag" class="input-field">
-                        <span class="control__help" id="error_check"></span>
-                        <button type="submit" id="submit-flag" onclick="checkTask()" class="submit-button">Submit</button>
-                    </form>
-                    <div id="flag-result"></div> -->
+                    
 
                     <script>
                         function checkTask(){
