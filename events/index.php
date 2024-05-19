@@ -6,7 +6,7 @@ $description="";
 require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
 ?>
 <style>
-    body {
+        body {
             /* background-color: #21232c; Цвет фона */
             background-color: #0d1b2a;
         }
@@ -15,6 +15,8 @@ require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
             background: #0d1b2a;
             background: -webkit-linear-gradient(to right, #0f2027, #203a43, #2c5364);
             background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            border: 1px solid #2e4053;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .card-body{
             color: white !important;
@@ -36,13 +38,44 @@ require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100%;
+            /* height: 100%; */
             padding: 20px;
             margin-bottom: 10px;
             border-radius: 15px;
             box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s ease-in-out;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             margin-right: 10px; /* Keep this on all but the last item per row */
+        }
+
+        .left-container h2 {
+            font-size: 20px; 
+            color: #6ba8e5; /* Светло-синий для заголовков */
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 5px;
+            text-decoration: underline; /* Подчеркивание для выделения */
+        }
+
+        .left-container .event-date {
+            font-size: 16px;
+            color: #FF7F50; /* Белый для даты */
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2px;
+        }
+
+        .left-container .event-time {
+            font-size: 16px;
+            color: #40E0D0; /* Светло-серый для времени, для различия с датой */
+            text-align: center;
+            font-weight: normal;
+        }
+
+        .left-container h4 {
+            font-size: 14px;
+            color: #cccccc; /* Светло-серый для описания */
+            text-align: center;
+            font-weight: normal;
         }
 
         .left-container:last-child {
@@ -100,10 +133,12 @@ if ($api->Managers->check_auth() == true && $api->Managers->man_block == 3)
                                     $time = $parts[1];
                                 ?>
                                     <div class="left-container" >
-                                        <a href="<?php echo $r["link"]; ?>" class="gradienttext" target="_blank"><h2 class="gradienttext"><?php echo $r["name"]; ?></h2></a>
+                                        <a href="<?php echo $r["link"]; ?>" class="gradienttext" target="_blank">
+                                            <h2 class="gradienttext"><?php echo $r["name"]; ?></h2>
+                                        </a>
                                         <h4 class="gradienttext"><?php echo $r["description"]; ?></h4>
-                                        <h4 class="gradienttext"><?php echo $date; ?></h4>
-                                        <h4 class="gradienttext"><?php echo $time; ?></h4>
+                                        <div class="event-date"><?php echo $date; ?></div>
+                                        <div class="event-time"><?php echo $time; ?></div>
                                         
                                     </div>
                                 <?php
@@ -135,11 +170,13 @@ if ($api->Managers->check_auth() == true && $api->Managers->man_block == 3)
                                     $time = $parts[1];
                                     $containerClass = $r["active"] == 1 ? "left-container" : "inactive-container";
                             ?>
-                                    <div class="<?php echo $containerClass; ?>">
-                                        <a href="<?php echo $r["link"]; ?>" class="gradienttext" target="_blank"><h2 class="gradienttext"><?php echo $r["name"]; ?></h2></a>
-                                        <h4 class="gradienttext"><?php echo $r["description"]; ?></h4>
-                                        <h4 class="gradienttext"><?php echo $date; ?></h4>
-                                        <h4 class="gradienttext"><?php echo $time; ?></h4>
+                                    <div class="<?php echo $containerClass; ?>" onclick="location.href='add.php?edit=<?=$r["id"]?>'">
+                                    <a href="<?php echo $r["link"]; ?>" class="gradienttext" target="_blank">
+                                        <h2 class="gradienttext"><?php echo $r["name"]; ?></h2>
+                                    </a>
+                                    <h4 class="gradienttext"><?php echo $r["description"]; ?></h4>
+                                    <div class="event-date"><?php echo $date; ?></div>
+                                    <div class="event-time"><?php echo $time; ?></div>
                                         
                                     </div>
                             <?php

@@ -21,7 +21,7 @@ if ($api->Managers->check_auth() == true)
 				background-color: #0d1b2a; /* Цвет фона */
 			}
             .card {
-                background-color: #0d1b2a; /* Цвет фона */
+                background-color: #1a2035; /* Цвет фона */
             }
             .card-body{
                 color: white !important;

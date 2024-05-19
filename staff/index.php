@@ -11,7 +11,7 @@ if ($api->Managers->check_auth() == true)
 		?>
         <style>
             
-           body {
+            body {
                 background-color: #0d1b2a; /* Цвет фона */
             }
             .card {
@@ -51,7 +51,7 @@ if ($api->Managers->check_auth() == true)
 							// else if ($r["id_section"] == 4)		$type = 'Компания';
 							// else if ($r["id_section"] == 5)		$type = 'Главный менеджер';
                             ?>
-                            <tr role="row" class="<?=(($i%2)==1 ? 'odd' : 'even')?>" onclick="location.href='add.php?edit=<?=$r["id"]?>>'" style="cursor:pointer">
+                            <tr role="row" class="<?=(($i%2)==1 ? 'odd' : 'even')?>" style="cursor:pointer; height: 40px; @media screen and (max-width: 767px) { height: auto; }; " onclick="location.href='add.php?edit=<?=$r["id"]?>>'">
                                 <td><?=$type?></td>
                                 <td><?=$r["name"]?></td>
 								<td><?=$r["phone"]?></td>
