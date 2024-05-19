@@ -134,6 +134,13 @@ if (
                         </a>
                     </li>
 
+                    <li class="nav-item<?=(substr($_SERVER["PHP_SELF"], 0, 8) == '/events/' ? ' active' : '')?>">
+                        <a href="/events/">
+                            <i class="fas fa-bullhorn"></i>
+                            <p>События</p>
+                        </a>
+                    </li>   
+
                     <li class="nav-item<?=($_SERVER["PHP_SELF"] == '/stat/index.php' ? ' active' : '')?>">
                         <a href="/stat/index.php">
                         <i class="fas fa-chart-area"></i>
@@ -141,12 +148,6 @@ if (
                         </a>							
                     </li>
 
-                    <li class="nav-item<?=(substr($_SERVER["PHP_SELF"], 0, 8) == '/events/' ? ' active' : '')?>">
-                        <a href="/events/">
-                            <i class="fas fa-bullhorn"></i>
-                            <p>События</p>
-                        </a>
-                    </li>   
 
 					<li class="nav-item">
                     	<hr />

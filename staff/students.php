@@ -27,6 +27,14 @@ if ($api->Managers->check_auth() == true)
                 border: 1px solid white !important; 
                 background-color: #2a3a5c !important; 
             }
+            .odd:hover {
+				transform: scale(1.02) !important;
+				box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4) !important;
+			}
+			.even:hover {
+				transform: scale(1.02) !important;
+				box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4) !important;
+			}
         </style>
 		<div class="card">
             <div class="card-body">

@@ -16,10 +16,21 @@ if ($api->Managers->check_auth() == true)
             }
             .card {
                 background-color: #1a2035; /* Цвет фона */
+                background: #12192c;
+				background: -webkit-linear-gradient(to right, #1b2735, #12192c);
+				background: linear-gradient(to right, #1b2735, #12192c);
             }
             .card-body{
                 color: white !important;
             }
+            .odd:hover {
+				transform: scale(1.02) !important;
+				box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4) !important;
+			}
+			.even:hover {
+				transform: scale(1.02) !important;
+				box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4) !important;
+			}
         </style>
 		<div class="card">
             <div class="card-body">
