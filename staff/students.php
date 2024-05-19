@@ -11,13 +11,21 @@ if ($api->Managers->check_auth() == true)
         <style>
             
            body {
-                background-color: #0d1b2a; /* Цвет фона */
+                
+                background-color: #0d1b2a;
             }
             .card {
                 background-color: #1a2035; /* Цвет фона */
+                background: #12192c;
+				background: -webkit-linear-gradient(to right, #1b2735, #12192c);
+				background: linear-gradient(to right, #1b2735, #12192c);
             }
             .card-body{
                 color: white !important;
+            }
+            .highlight-row {
+                border: 1px solid white !important; 
+                background-color: #2a3a5c !important; 
             }
         </style>
 		<div class="card">
@@ -32,11 +40,8 @@ if ($api->Managers->check_auth() == true)
                         <table id="basic-datatables" class="display table table-striped table-hover dataTable">
         					<thead>
                                 <tr>
-                                    <!-- <th>Тип</th> -->
+                                    
                                     <th>ФИ</th>
-									<!-- <th>Телефон</th> -->
-									<!-- <th>Логин</th> -->
-                                    <!-- <th>Пароль</th> -->
                                     <th>Баллы</th>
                                     <th>Количество решенных задач</th>
                                 </tr>
@@ -44,20 +49,11 @@ if ($api->Managers->check_auth() == true)
                         <?
                         while($r=mysql_fetch_array($s))
                         {
-							$type = '';
-							if ($r["id_section"] == 1)			$type = 'Админ';
-							else if ($r["id_section"] == 2)		$type = 'Преподователь';
-							else if ($r["id_section"] == 3)		$type = 'Студент';
-							// else if ($r["id_section"] == 4)		$type = 'Компания';
-							// else if ($r["id_section"] == 5)		$type = 'Главный менеджер';
+                            $rowClass = ($r["id"] == $api->Managers->man_id) ? 'highlight-row' : '';
                             ?>
-                            <tr role="row" class="<?=(($i%2)==1 ? 'odd' : 'even')?> " style="height: 30px; @media screen and (max-width: 767px) { height: auto; }; ">
-                                
-                                <td><?=$r["name"]?></td>
-								<!-- <td><?=$r["phone"]?></td> -->
-                                <!-- <td><?=$r["login"]?></td> -->
-                                <!-- <td><?=$r["pass"]?></td> -->
-                                <!-- <td><?=(intval($r["active"]) == 1 ? 'активный' : 'заблокированный')?></td> -->
+                            <tr role="row" class="<?=(($i%2)==1 ? 'odd' : 'even')?> <?php echo $rowClass; ?>" style="height: 40px; @media screen and (max-width: 767px) { height: auto; }; ">
+
+								<td><?=$r["name"]?></td>
                                 <td><?=$r["points"]?></td>
                                 <td><?=$r["task_amount"]?></td>
                             </tr>

@@ -180,33 +180,33 @@ if ($api->Managers->check_auth() == true) {
 			$sub_query = "SELECT `task_id` FROM `i_solved` WHERE `user_id` = ".$user_id;
 			$s=mysql_query($sub_query);
 		?>
-				<div class="left-container">
-        <img class="img-profile" src="https://cdn.pixabay.com/photo/2015/01/08/18/29/entrepreneur-593358__480.jpg" alt="Profile Image">
-        <h2 class="gradienttext"><?php echo $user_name_value; ?></h2>
-        <p>Студент</p>
-    </div>
-    <div class="right-container">
-        <h3 class="gradienttext">Детали Профиля</h3>
-        <table>
-            <tr>
-                <td>ФИ :</td>
-                <td><?php echo $user_name_value; ?></td>
-            </tr>
-            <tr>
-                <td>Номер телефона :</td>
-                <td><?php echo $phone_value; ?></td>
-            </tr>
-            <tr>
-                <td>Никнейм :</td>
-                <td><?php echo $login_value; ?></td>
-            </tr>
-			<tr>
-                <td>Количество очков :</td>
-                <td><?php echo $points; ?></td>
-            </tr>
-        </table>
-    </div>
-</div>
+			<div class="left-container">
+				<img class="img-profile" src="https://cdn.pixabay.com/photo/2015/01/08/18/29/entrepreneur-593358__480.jpg" alt="Profile Image">
+				<h2 class="gradienttext"><?php echo $user_name_value; ?></h2>
+				<p>Студент</p>
+			</div>
+			<div class="right-container">
+				<h3 class="gradienttext">Детали Профиля</h3>
+				<table>
+					<tr>
+						<td>ФИ :</td>
+						<td><?php echo $user_name_value; ?></td>
+					</tr>
+					<tr>
+						<td>Номер телефона :</td>
+						<td><?php echo $phone_value; ?></td>
+					</tr>
+					<tr>
+						<td>Никнейм :</td>
+						<td><?php echo $login_value; ?></td>
+					</tr>
+					<tr>
+						<td>Количество очков :</td>
+						<td><?php echo $points; ?></td>
+					</tr>
+				</table>
+			</div>
+		</div>
 
         <div class="card">
 			<div class="card-body" style="position:relative" id="width_body">				

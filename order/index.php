@@ -47,32 +47,43 @@ if ($api->Managers->check_auth() == true)
 		<style>
 
 			body {
-				background-color: #1f222e; /* Цвет фона */
+				background-color: #0d1b2a; /* Dark background */
 			}
 
 			.card {
-				background-color: white;; 
+				
+				background: #12192c;
+				background: -webkit-linear-gradient(to right, #1b2735, #12192c);
+				background: linear-gradient(to right, #1b2735, #12192c);
 			}
 
 			.card-body {
 				color: white;
+				background: #12192c;
+				background: -webkit-linear-gradient(to right, #1b2735, #12192c);
+				background: linear-gradient(to right, #1b2735, #12192c);
 				
-				background-color: #021b3b;; 
 			}
 
-
+			
 			.btn {
-				background-color: white;;
+				background-color: white;
 			}
-
 
 			.form-control {
 				background-color: #a1a398; 
 			}
-
 			
-
+			.odd:hover {
+				transform: scale(1.02) !important;
+				box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4) !important;
+			}
+			.even:hover {
+				transform: scale(1.02) !important;
+				box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4) !important;
+			}
 		</style>
+
 		<div class="card">
 			<div class="card-body" style="padding:10px 1.25rem 5px">
 				<style>
@@ -233,6 +244,8 @@ if ($api->Managers->check_auth() == true)
 									break;
 							}
 							
+							
+				
 							?>
 							<tr role="row" class="<?=(($i%2)==1 ? 'odd' : 'even')?>" style="height: 30px; @media screen and (max-width: 767px) { height: auto; }; ">																
 								<td<?=$link?> nowrap="nowrap"><?=$r["id"]?></td>
