@@ -35,10 +35,13 @@ if (
             $description = trim($api->Strings->pr($_POST["description"]));
             
             
+			$date = DateTime::createFromFormat('d-m-Y H:i', $_POST["date"]);
+			$formatted_date = $date->format('Y-m-d H:i:s');
+
 			if ($api->Managers->man_block == 1 || $api->Managers->man_block == 2)
 			{
                     
-					$sql_insert = "INSERT INTO `i_events` (`name`, `description`,`link`, `active`, `date`) VALUES ('".$name."', '".$description."', '".$link."', '".$active."', '".$date."')";
+					$sql_insert = "INSERT INTO `i_events` (`name`, `description`,`link`, `active`, `date`) VALUES ('".$name."', '".$description."', '".$link."', '".$active."', '".$formatted_date."')";
 					$insert = mysql_query($sql_insert);
 					
 					if ($insert)
@@ -67,12 +70,15 @@ if (
             $description = trim($api->Strings->pr($_POST["description"]));
             $edit = intval($_POST["edit"]);
 			
+			            
+			$date = DateTime::createFromFormat('d-m-Y H:i', $_POST["date"]);
+			$formatted_date = $date->format('Y-m-d H:i:s');
         
             $s=mysql_query("SELECT `id` FROM `i_events` WHERE `id`='".$edit."' LIMIT 1");
             $r=mysql_fetch_array($s);
             
             
-            $sql_update = "UPDATE `i_events` SET `name`='".$name."', `active`='".$active."', `link`='".$link."', `description`='".$description."', `date`='".$date."' WHERE `id`='".$edit."'";
+            $sql_update = "UPDATE `i_events` SET `name`='".$name."', `active`='".$active."', `link`='".$link."', `description`='".$description."', `date`='".$formatted_date."' WHERE `id`='".$edit."'";
             $update = mysql_query($sql_update);
 
         

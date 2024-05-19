@@ -124,11 +124,11 @@ if ($api->Managers->check_auth() == true && $api->Managers->man_block == 3)
                     <div id="basic-datatables_wrapper" class="dataTables_wrapper dt-bootstrap4">
                         <div class="cards-container">
                             <?php
-                            $s = mysql_query("SELECT * FROM `i_events` WHERE `active` = 1 ORDER BY `id` ASC");
+                            $s = mysql_query("SELECT *, DATE_FORMAT(date, '%Y-%m-%d %H:%i') as formatted_date FROM `i_events` WHERE `active` = 1 ORDER BY `date` DESC");
                             if (mysql_num_rows($s) > 0) {
                                 while ($r = mysql_fetch_array($s)) {
-                                    $dateString = $r["date"]; 
-                                    $parts = explode(" ", $dateString); 
+                                    $dateString = $r["formatted_date"];
+                                    $parts = explode(" ", $dateString);
                                     $date = $parts[0];
                                     $time = $parts[1];
                                 ?>
@@ -161,13 +161,13 @@ if ($api->Managers->check_auth() == true && $api->Managers->man_block == 3)
                     <div id="basic-datatables_wrapper" class="dataTables_wrapper dt-bootstrap4">
                         <div class="cards-container" > 
                             <?php
-                            $s = mysql_query("SELECT * FROM `i_events` ORDER BY `active` DESC"); // Убрали фильтр активности
-                            if (mysql_num_rows($s) > 0) {
-                                while ($r = mysql_fetch_array($s)) {
-                                    $dateString = $r["date"];
-                                    $parts = explode(" ", $dateString);
-                                    $date = $parts[0];
-                                    $time = $parts[1];
+                             $s = mysql_query("SELECT *, DATE_FORMAT(date, '%Y-%m-%d %H:%i') as formatted_date FROM `i_events` WHERE `active` = 1 ORDER BY `date` DESC");
+                             if (mysql_num_rows($s) > 0) {
+                                 while ($r = mysql_fetch_array($s)) {
+                                     $dateString = $r["formatted_date"];
+                                     $parts = explode(" ", $dateString);
+                                     $date = $parts[0];
+                                     $time = $parts[1];
                                     $containerClass = $r["active"] == 1 ? "left-container" : "inactive-container";
                             ?>
                                     <div class="<?php echo $containerClass; ?>" onclick="location.href='add.php?edit=<?=$r["id"]?>'">

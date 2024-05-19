@@ -45,11 +45,13 @@ if (
 		($api->Managers->check_auth() == true) &&
 		(		
 			$_SERVER['PHP_SELF'] == '/order/index.php' ||
-			$_SERVER['PHP_SELF'] == '/order/fresh.php' ||
-			$_SERVER['PHP_SELF'] == '/basket/index.php' ||
-			$_SERVER['PHP_SELF'] == '/profile/index.php' ||
-			$_SERVER['PHP_SELF'] == '/settings/baza/index.php' ||
-			$_SERVER['PHP_SELF'] == '/stat/index.php'
+            $_SERVER['PHP_SELF'] == '/profile/index.php' ||
+            $_SERVER['PHP_SELF'] == '/order/add.php' ||  
+            $_SERVER['PHP_SELF'] == '/staff/students.php' || 
+            $_SERVER['PHP_SELF'] == '/events/index.php' || 
+			$_SERVER['PHP_SELF'] == '/stat/index.php' ||
+            $_SERVER['PHP_SELF'] == '/staff/index.php' ||
+            $_SERVER['PHP_SELF'] == '/settings/change.php' 
 		)
 	)
 )
