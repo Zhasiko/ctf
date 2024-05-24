@@ -177,8 +177,7 @@ if ($api->Managers->check_auth() == true) {
 				$points = $r["points"];
 				$solved_cnt = $r["task_amount"];
 			}
-			$sub_query = "SELECT `task_id` FROM `i_solved` WHERE `user_id` = ".$user_id;
-			$s=mysql_query($sub_query);
+
 		?>
 			<div class="left-container">
 				<img class="img-profile" src="https://cdn.pixabay.com/photo/2015/01/08/18/29/entrepreneur-593358__480.jpg" alt="Profile Image">
@@ -223,13 +222,11 @@ if ($api->Managers->check_auth() == true) {
 
 					$i=1;
 					$per_page = 100;
-					$sql_solved = " AND `id` IN (".$sub_query.")";
-					$sql_ = "FROM `i_order` WHERE `id` IS NOT NULL".$sql_solved;
-
+					$sql_ = "FROM i_order JOIN i_solved ON i_order.id = i_solved.task_id WHERE i_solved.user_id = ".$user_id;
 					$api->Pag->setvars($lang, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], mysql_result(mysql_query("SELECT COUNT('id') ".$sql_), 0), $per_page, @$_GET['p']);
 					if (!empty($_GET['p'])) {$start=$_GET['p'];} else {$start=1; $_GET["p"]=1;}
 
-					$sql_query = "SELECT * ".$sql_." ORDER BY ".$order_by." LIMIT ".$api->Pag->start_from.", ".$per_page."";
+					$sql_query = "SELECT i_order.*, i_solved.solved_date  ".$sql_." ORDER BY ".$order_by." LIMIT ".$api->Pag->start_from.", ".$per_page."";
 					$s=mysql_query($sql_query);
 					if (mysql_num_rows($s) > 0)
 					{
@@ -240,7 +237,7 @@ if ($api->Managers->check_auth() == true) {
 							<thead>
 								<tr>									
 									<th>ID</th>
-									<th nowrap>Дата создания</th>
+									<th nowrap>Дата решение</th>
 									<th>Название</th>
 									<th>Категория</th>																									
 									<th>Балл</th>
@@ -254,7 +251,7 @@ if ($api->Managers->check_auth() == true) {
 							$link = ' style="cursor:pointer;" onclick="location.href=\'../order/more.php?id=' . $r["id"] . '\'" style="cursor:pointer;"';
 
 							$task_name = $r["task_name"];
-							$date = $api->Strings->date($lang,$r["create_date"],'sql','datetime');
+							$date = $api->Strings->date($lang,$r["solved_date"],'sql','datetime');
 							$points = intval($r["points"]);
 							$level = $r["level"];
 							
