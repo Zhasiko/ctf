@@ -72,7 +72,7 @@ if ($api->Managers->check_auth() == true) {
     }
     // Сбор процентов в массив
     $percentages = array(
-        'Стеганография' => $procent_stegano,
+        'Стеганография' => isset($procent_stegano),
         'Веб' => $procent_web,
         'Криптография' => $procent_crypto,
         'Прочее' => $procent_etc
@@ -251,5 +251,5 @@ if ($api->Managers->check_auth() == true) {
 } else {
     require($_SERVER["DOCUMENT_ROOT"] . "/text_noAuth.php");
 }
-// require($_SERVER["DOCUMENT_ROOT"] . "/libs/footer.php");
+require($_SERVER["DOCUMENT_ROOT"] . "/libs/footer.php");
 ?>

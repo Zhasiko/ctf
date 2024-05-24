@@ -65,7 +65,7 @@ if ($api->Managers->check_auth() == true)
 						$alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
 						$pass = array(); //remember to declare $pass as an array
 						$alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
-						for ($i = 0; $i < 4; $i++) {
+						for ($i = 0; $i < 8; $i++) {
 							$n = rand(0, $alphaLength);
 							$pass[] = $alphabet[$n];
 						}
@@ -191,12 +191,22 @@ if ($api->Managers->check_auth() == true)
 
 				<?php /*?>var phone = jQuery("#login").val();
 				phone = phone.replace(/_/g, "");<?php */?>
-				if (jQuery("#login").val()=="" <?php /*?>|| phone.length != 14<?php */?>)
+				if (jQuery("#login").val()=="")
 				{
 					err_key = 1;
 					jQuery("#error_login").html('Не заполнено поле Логин').css("display", "inline-block");
 					jQuery("#login").css("border-color", "#f00");
 					if (focused == 0) { jQuery("#login").focus(); focused = 1; }
+				} else {
+					var login = jQuery("#login").val();
+					var regex = /^(?!^\d)[A-Za-z0-9]*[A-Za-z][A-Za-z0-9]*$/;
+
+					if (!regex.test(login) || login.length <= 3) {
+						err_key = 1;
+						jQuery("#login").css("border-color", "#f00");
+						jQuery("#error_login").html('Логин должен быть более 3 символов, содержать хотя бы одну букву и не начинаться с цифры').css("display", "inline-block");
+						if (focused == 0) { jQuery("#login").focus(); focused = 1; }
+					}
 				}
 
 				if (jQuery("#pass").val() == '')
@@ -205,6 +215,16 @@ if ($api->Managers->check_auth() == true)
 					jQuery("#pass").css("border-color", "#f00");
 					jQuery("#error_pass").html('Не заполнено поле Пароль').css("display", "inline-block");
 					if (focused == 0) { jQuery("#pass").focus(); focused = 1; }
+				} else {
+					var password = jQuery("#pass").val();
+					var regex = /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+					if (!regex.test(password)) {
+						err_key = 1;
+						jQuery("#pass").css("border-color", "#f00");
+						jQuery("#error_pass").html('Пароль должен быть не менее 8 символов и содержать буквы и цифры').css("display", "inline-block");
+						if (focused == 0) { jQuery("#pass").focus(); focused = 1; }
+					}
 				}
 				
 				var phone = jQuery("#phone").val();

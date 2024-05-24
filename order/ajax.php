@@ -17,10 +17,9 @@ if (
 	if (
 		$api->Managers->check_auth() == true &&
 		(
-			$api->Managers->man_block == 1 || // админ 
-			$api->Managers->man_block == 2 || $api->Managers->man_block == 5 || // менеджеры
-			$api->Managers->man_block == 3 || // досмотрщик
-			$api->Managers->man_block == 4 // брокер
+			$api->Managers->man_block == 1 || 
+			$api->Managers->man_block == 2 || 
+			$api->Managers->man_block == 3 
 		)
 	)
 	{
@@ -367,7 +366,7 @@ if (
 
 							echo '
 							<script type="text/javascript">
-								jQuery("#protocolDel").html("<span style=\"color:#53b374\">Вы успешно удалили заявку</span>");
+								jQuery("#protocolDel").html("<span style=\"color:#53b374\">Вы успешно удалили задачу</span>");
 								setTimeout(function() { self.location = "/order/"; }, 50);
 							</script>';
 						}
@@ -1088,7 +1087,7 @@ if (
 
 				$s=mysql_query("SELECT * FROM `i_order` WHERE `id`='".$id_order."' LIMIT 1");
 				if (mysql_num_rows($s) > 0)
-				{ 
+				{
 					$r=mysql_fetch_array($s);	
 						
 					function randomPassword() 

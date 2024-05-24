@@ -78,8 +78,8 @@ if ($api->Managers->check_auth() == true)
                     <label for="active" class="col-lg-4 col-md-3 col-sm-4 mt-sm-2 text-right" style = "color: white !important;" >Статус <span class="required-label">*</span></label>
                     <div class="col-lg-4 col-md-9 col-sm-8">
                         <select class="form-control" id="active">
-                        	<option value="1"<?=($active_value == 1 ? ' selected' : '')?>> Актуальный </option>
-							<option value="0"<?=($active_value == 0 ? ' selected' : '')?>> Неактуальный </option>
+                        	<option value="1"<?=($active_value == 1 ? ' selected' : '')?>> Активный </option>
+							<option value="0"<?=($active_value == 0 ? ' selected' : '')?>> Неактивный </option>
 						</select>
                 	</div>
                    

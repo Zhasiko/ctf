@@ -16,7 +16,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
             background: -webkit-linear-gradient(to right, #0f2027, #203a43, #2c5364);
             background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
             border: 1px solid #2e4053;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .card-body{
             color: white !important;
@@ -45,6 +45,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
             box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.3);
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             margin-right: 10px; /* Keep this on all but the last item per row */
+            min-height: 250px;
         }
 
         .left-container h2 {
@@ -98,7 +99,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100%;
+            /* height: 100%; */
             padding: 20px;
             margin-bottom: 10px;
             border-radius: 15px;
@@ -106,6 +107,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
             box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5) !important;
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             margin-right: 10px; /* Adjusted margin */
+            min-height: 250px;
         }
         .inactive-container:hover {
             transform: translateY(-5px);
@@ -161,7 +163,7 @@ if ($api->Managers->check_auth() == true && $api->Managers->man_block == 3)
                     <div id="basic-datatables_wrapper" class="dataTables_wrapper dt-bootstrap4">
                         <div class="cards-container" > 
                             <?php
-                             $s = mysql_query("SELECT *, DATE_FORMAT(date, '%Y-%m-%d %H:%i') as formatted_date FROM `i_events` WHERE `active` = 1 ORDER BY `date` DESC");
+                             $s = mysql_query("SELECT *, DATE_FORMAT(date, '%Y-%m-%d %H:%i') as formatted_date FROM `i_events` ORDER BY `date` DESC");
                              if (mysql_num_rows($s) > 0) {
                                  while ($r = mysql_fetch_array($s)) {
                                      $dateString = $r["formatted_date"];

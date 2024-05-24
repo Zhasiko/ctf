@@ -8,10 +8,9 @@ require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
 if ($api->Managers->check_auth() == true)
 {
 	if (
-		$api->Managers->man_block == 1 || // админ 
-		$api->Managers->man_block == 2 || $api->Managers->man_block == 5 || // менеджеры
-		$api->Managers->man_block == 3 || // досмотрщик
-		$api->Managers->man_block == 4 // брокер
+		$api->Managers->man_block == 1 ||  
+		$api->Managers->man_block == 2 || 
+		$api->Managers->man_block == 3 
 	)
 	{		
 		$user_id = $api->Managers->man_id;
@@ -247,7 +246,7 @@ if ($api->Managers->check_auth() == true)
 							
 				
 							?>
-							<tr role="row" class="<?=(($i%2)==1 ? 'odd' : 'even')?>" style="height: 30px; @media screen and (max-width: 767px) { height: auto; }; ">																
+							<tr role="row" class="<?=(($i%2)==1 ? 'odd' : 'even')?>" style="height: 35px; @media screen and (max-width: 767px) { height: auto; }; ">																
 								<td<?=$link?> nowrap="nowrap"><?=$r["id"]?></td>
 								<td<?=$link?> nowrap="nowrap"><?=$date?></td>
 								<td<?=$link?> nowrap="nowrap"><?=$task_name?></td>	

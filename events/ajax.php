@@ -72,8 +72,15 @@ if (
 			
 			            
 			$date = DateTime::createFromFormat('d-m-Y H:i', $_POST["date"]);
-			$formatted_date = $date->format('Y-m-d H:i:s');
+			// $formatted_date = $date->format('Y-m-d H:i:s');
         
+			if ($date) {
+				$formatted_date = $date->format('Y-m-d H:i:s');
+				
+			} else {
+				$formatted_date = $_POST["date"];
+			}
+
             $s=mysql_query("SELECT `id` FROM `i_events` WHERE `id`='".$edit."' LIMIT 1");
             $r=mysql_fetch_array($s);
             

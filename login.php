@@ -45,27 +45,19 @@ if (
 	echo '
 	<script type="text/javascript">';
 	
-	/*if ($response != null && $response->success) 
-	{*/					
-		// echo $login;
-		// echo encryptPassword($pass, $encryption_key);
-		// echo decryptPassword("test", $encryption_key);
-		if ($api->Managers->check_login($login, $pass) != false) // encryptPassword($pass, $encryption_key)
+	
+		if ($api->Managers->check_login($login, $pass) != false)
 		{
 			
 			$password = $api->Managers->check_login($login, $pass);
-			
-			// list($password, $iv) = explode('::', base64_decode($password), 2);
-
+				
 			$normpassword = decryptPassword($password, $encryption_key);
 
-			// echo $normpassword;
-			// echo $password;
 			
 			if($pass == $normpassword){
 				$api->Managers->login_user($login, $pass);
 				// echo $normpassword;
-				if (isset($_POST["remember"]) && intval($_POST["remember"])==1) {			
+				if (isset($_POST["remember"]) && intval($_POST["remember"])==1) {
 					echo 'jQuery.cookie("man_auth_site", "'.$login."|".sha1($normpassword).'", { expires: 7, path: "/"}); ';
 				}
 				
@@ -79,14 +71,6 @@ if (
 					setTimeout(function() { self.location = "'.$link.'"; }, 50);
 				});
 				';
-			}
-			else if (
-				$api->Managers->check_block($login, $pass) == true
-			)
-			{
-				echo '		
-				jQuery("#protocolLog").html("<p style=\"color:#f00;margin:10px 0;\">Ваш логин заблокирован, обратитесь к администратору.</p>").slideDown(700);				
-				';	
 			}
 			else 
 			{
