@@ -237,7 +237,7 @@ if ($api->Managers->check_auth() == true) {
 							<thead>
 								<tr>									
 									<th>ID</th>
-									<th nowrap>Дата решение</th>
+									<th nowrap>Дата решения</th>
 									<th>Название</th>
 									<th>Категория</th>																									
 									<th>Балл</th>
