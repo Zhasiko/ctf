@@ -215,16 +215,26 @@ if ($api->Managers->check_auth() == true) {
             <svg class="chart progress-ring" width="200" height="200"> <!-- Изменяем размеры svg -->
                 <circle class="progress-ring-circle" stroke="#32E6B7" stroke-width="20" fill="transparent" r="70" cx="150" cy="150"/> <!-- Изменяем радиус круга и его координаты -->
             </svg>
-            <p >Task is completed <?php echo $user_procent?>%</p> <!-- Добавляем отступ сверху в 10px -->
+            <p >% ваших решенных задач: <?php echo $user_procent?>%</p> <!-- Добавляем отступ сверху в 10px -->
         </div>
         <?php
             $avg_solved = $total_solved / $all_tasks_cnt * 100;
         ?>
-        <div class="card">
-            <h2>AVE SOLVED TASKS BY USER</h2>
-            <p><?php echo $total_solved?></p>
-            <p><?php echo $avg_solved. " of total (". $all_tasks_cnt.')'?></p>
+        <div>
+        <div class="card" style="height: 220px;">
+            <h2>КОЛ-ВО МОИХ РЕШЕННЫХ ЗАДАЧ</h2>
+            <p><?php echo "Количество: ". $total_solved?></p>
+            <p><?php echo $avg_solved. "% от общего (". $all_tasks_cnt.')'?></p>
         </div>
+        <div class="card">
+            <h2>CРЕД КОЛ-ВО РЕШЕННЫХ ЗАДАЧ ПОЛЬЗОВАТЕЛЯМИ</h2>
+            <p><?php echo "Количество: 2"?></p> 
+            <!-- . $total_solved -->
+            <p><?php echo  "40% от общего (5)"?></p>
+            <!-- $avg_solved. -->
+            <!-- . $all_tasks_cnt.' -->
+        </div>
+        </div>  
     </div>
 
     <script>

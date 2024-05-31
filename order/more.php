@@ -62,8 +62,8 @@ if ($api->Managers->check_auth() == true) {
                         padding: 0;
                         background-color: #1f222e;
                         background: #12192c;
-				        background: -webkit-linear-gradient(to right, #1b2735, #12192c);
-				        background: linear-gradient(to right, #1b2735, #12192c);
+				        /* background: -webkit-linear-gradient(to right, #1b2735, #12192c);
+				        background: linear-gradient(to right, #1b2735, #12192c); */
                         
                     }
 
@@ -76,9 +76,9 @@ if ($api->Managers->check_auth() == true) {
                         padding: 20px;
                         /* background-color: #1f222e; */
                         border-radius: 8px;
-                        background: #12192c;
-                        background: -webkit-linear-gradient(to right, #1b2735, #12192c);
-                        background: linear-gradient(to right, #1b2735, #12192c);
+                        /* background: #12192c;
+                        background: -webkit-linear-gradient(to right, #1b2735, #12192c); */
+                        background: linear-gradient(to left, #1b2735, #12192c);
                         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                     }
 
@@ -320,8 +320,8 @@ if ($api->Managers->check_auth() == true) {
                         padding: 0;
                         background-color: #1f222e;
                         background: #12192c;
-				        background: -webkit-linear-gradient(to right, #1b2735, #12192c);
-				        background: linear-gradient(to right, #1b2735, #12192c);
+				        /* background: -webkit-linear-gradient(to right, #1b2735, #12192c); */
+				        /* background: linear-gradient(to right, #1b2735, #12192c); */
                         
                     }
 
@@ -335,9 +335,9 @@ if ($api->Managers->check_auth() == true) {
                         background-color: #1f222e;
                         border-radius: 8px;
                         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                        background: #12192c;
-                        background: -webkit-linear-gradient(to right, #1b2735, #12192c);
-                        background: linear-gradient(to right, #1b2735, #12192c);
+                        /* background: #1b2735; */
+                        /* background: -webkit-linear-gradient(to right, #1b2735, #12192c); */
+                        background: linear-gradient(to left, #1b2735, #12192c);
                     }
 
                     .task-name {

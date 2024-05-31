@@ -12,9 +12,10 @@ require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
         }
         .card {
             /* background-color: #1a2035; Цвет фона */
-            background: #0d1b2a;
-            background: -webkit-linear-gradient(to right, #0f2027, #203a43, #2c5364);
-            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            background: #12192c;
+            /* background: -webkit-linear-gradient(to left, #0f2027, #203a43, #2c5364); */
+            
+            background: linear-gradient(to left, #1b2735, #12192c);
             border: 1px solid #2e4053;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
@@ -30,9 +31,9 @@ require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
         }
 
         .left-container {
-            background: #12192c;
-            background: -webkit-linear-gradient(to right, #1b2735, #12192c);
-            background: linear-gradient(to right, #1b2735, #12192c);
+            background: #0f2027;
+            /* background: -webkit-linear-gradient(to right, #1b2735, #12192c); */
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
             flex-basis: calc(33.333% - 14px); /* Adjusted for margin-right */
             display: flex;
             flex-direction: column;

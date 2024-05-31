@@ -70,7 +70,8 @@ if ($api->Managers->check_auth() == true)
 			}
 
 			.form-control {
-				background-color: #a1a398; 
+				background-color: white;
+				color: black; 
 			}
 			
 			.odd:hover {

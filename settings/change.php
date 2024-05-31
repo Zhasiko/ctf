@@ -13,6 +13,7 @@ if ($api->Managers->check_auth() == true) {
 	}
 	.card {
 		background-color: #1a2035;; /* Цвет фона */
+		background: linear-gradient(to right, #1b2735, #12192c);
 	}
 	.card-body{
 		color: white !important;

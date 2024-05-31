@@ -211,15 +211,24 @@ if ($api->Managers->check_auth() == true)
             <style>
 				body {
 					background-color: #0d1b2a;
+					
 				}
 
 				.card {
-					background-color: #1a2035;; 
+					background-color: #1a2035; 
+					background: #12192c;
+					background: -webkit-linear-gradient(to right, #1b2735, #12192c);
+					background: linear-gradient(to right, #1b2735, #12192c);
+					box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 				}
 
 				.card-body {
 					background-color: #1a2035;
 					color: white !important;
+					background: #12192c;
+					background: -webkit-linear-gradient(to right, #1b2735, #12192c);
+					background: linear-gradient(to right, #1b2735, #12192c);
+					box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 				}
 				.card-body .row{
 					
@@ -239,7 +248,8 @@ if ($api->Managers->check_auth() == true)
 				}
 				
 				.form-control {
-					background-color: #a1a398; 
+					background-color: white; 
+					color: black;
 				}
 				/* .container {
 					background-color: black;
@@ -300,7 +310,7 @@ if ($api->Managers->check_auth() == true)
 						
 						<? if ($v == 'task_type') { ?>
 						<select class="form-control" id="<?=$v?>">
-							<option value=""> выберите тип </option>
+							<option value="" style = "color: white !important;"> выберите тип </option>
 							<option value="stegano"<?=($fields[$v] == 'stegano' ? ' selected' : '')?>> stegano </option>
 							<option value="web"<?=($fields[$v] == 'web' ? ' selected' : '')?>> web </option>
 							<option value="crypto"<?=($fields[$v] == 'crypto' ? ' selected' : '')?>> crypto </option>
