@@ -57,7 +57,7 @@ if ($api->Managers->check_auth() == true)
                         {
 							$type = '';
 							if ($r["id_section"] == 1)			$type = 'Админ';
-							else if ($r["id_section"] == 2)		$type = 'Преподователь';
+							else if ($r["id_section"] == 2)		$type = 'Преподаватель';
 							else if ($r["id_section"] == 3)		$type = 'Студент';
 							// else if ($r["id_section"] == 4)		$type = 'Компания';
 							// else if ($r["id_section"] == 5)		$type = 'Главный менеджер';

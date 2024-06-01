@@ -42,6 +42,7 @@ if ($api->Managers->check_auth() == true)
                 $login_value = '';
 				$timestamp_x = '';
 				$phone_value = '';
+				$password_value = '';
                 if (isset($_GET["edit"]) && intval($_GET["edit"]) != 0)
                 {
 					$sql_ = '';										
@@ -60,31 +61,31 @@ if ($api->Managers->check_auth() == true)
 						$phone_value = $r["phone"];
                     }
                 }
-				else
-				{
-					function randomPassword() {
-						//$alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-						$alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
-						$pass = array(); //remember to declare $pass as an array
-						$alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
-						for ($i = 0; $i < 8; $i++) {
-							$n = rand(0, $alphaLength);
-							$pass[] = $alphabet[$n];
-						}
-						return implode($pass); //turn the array into a string
-					}
+				// else
+				// {
+				// 	function randomPassword() {
+				// 		//$alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+				// 		$alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
+				// 		$pass = array(); //remember to declare $pass as an array
+				// 		$alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+				// 		for ($i = 0; $i < 8; $i++) {
+				// 			$n = rand(0, $alphaLength);
+				// 			$pass[] = $alphabet[$n];
+				// 		}
+				// 		return implode($pass); //turn the array into a string
+				// 	}
 
-					$password_value = randomPassword();
+				// 	$password_value = randomPassword();
 					
-					$hashed_password = password_hash($password_value, PASSWORD_DEFAULT);
+				// 	// $hashed_password = password_hash($password_value, PASSWORD_DEFAULT);
 
-					// // При аутентификации проверка пароля с хэшированным паролем из базы данных
-					// if (password_verify($введенный_пароль, $хэшированный_пароль_из_базы_данных)) {
-					// 	echo "Пароль верный";
-					// } else {
-					// 	echo "Пароль неверный";
-					// }
-				}
+				// 	// // При аутентификации проверка пароля с хэшированным паролем из базы данных
+				// 	// if (password_verify($введенный_пароль, $хэшированный_пароль_из_базы_данных)) {
+				// 	// 	echo "Пароль верный";
+				// 	// } else {
+				// 	// 	echo "Пароль неверный";
+				// 	// }
+				// }
                 ?>
                 <div class="form-group form-show-validation row">
                     <label for="active" class="col-lg-4 col-md-3 col-sm-4 mt-sm-2 text-right" style = "color: white !important;" >Статус <span class="required-label">*</span></label>
@@ -107,7 +108,7 @@ if ($api->Managers->check_auth() == true)
                         <select class="form-control" id="cat">							
                         	<option value=""> Выберите категорию </option>
 							<option value="1"<?=($cat_value == 1 ? ' selected' : '')?>> Админ </option>
-							<option value="2"<?=($cat_value == 2 ? ' selected' : '')?>> Преподователь </option>
+							<option value="2"<?=($cat_value == 2 ? ' selected' : '')?>> Преподаватель </option>
 							<option value="3"<?=($cat_value == 3 ? ' selected' : '')?>> Студент </option>
 							<!-- <option value="4"<?=($cat_value == 4 ? ' selected' : '')?>> Компания </option> -->
 							<!-- <option value="5"<?=($cat_value == 5 ? ' selected' : '')?>> Главный менеджер </option> -->
@@ -201,7 +202,8 @@ if ($api->Managers->check_auth() == true)
 					if (focused == 0) { jQuery("#login").focus(); focused = 1; }
 				} else {
 					var login = jQuery("#login").val();
-					var regex = /^(?!^\d)[A-Za-z0-9]*[A-Za-z][A-Za-z0-9]*$/;
+					// var regex = /^(?!^\d)[A-Za-z0-9]*[A-Za-z][A-Za-z0-9]*$/;
+					var regex = /^(?!^\d)(?=.*[A-Za-z]).*$/;
 
 					if (!regex.test(login) || login.length <= 3) {
 						err_key = 1;

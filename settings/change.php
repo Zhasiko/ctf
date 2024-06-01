@@ -71,10 +71,10 @@ if ($api->Managers->check_auth() == true) {
 		
 		if (jQuery("#user_pass1").val() != '' && jQuery("#user_pass_old").val() != '')
 		{										
-			if ((jQuery("#user_pass1").val() == '') || (jQuery("#user_pass1").val().length < 4))  
+			if ((jQuery("#user_pass1").val() == '') || (jQuery("#user_pass1").val().length < 8))  
 			{ 
 				err_key = 1; 
-				jQuery("#user_pass_info1").html('не верно указан  Пароль, пароль должен быть не короче 4х символов').css("display", "inline-block"); 
+				jQuery("#user_pass_info1").html('не верно указан  Пароль, пароль должен быть не короче 8 символов').css("display", "inline-block"); 
 				jQuery("#user_pass1").css("border-color", " #f00"); 
 				if (focused == 0) { jQuery("#user_pass1").focus(); focused = 1; } 
 			} 

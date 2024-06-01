@@ -435,6 +435,37 @@ if ($api->Managers->check_auth() == true) {
                         font-weight: bold;
                         margin-bottom: 10px; /* Add margin */
                     }
+
+                    .edit-button {
+                        display: inline-block;
+                        padding: 10px 20px;
+                        background-color: #28a745;
+                        color: #fff;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        transition: background-color 0.3s;
+                        margin-bottom: 20px;
+                    }
+
+                    .edit-button:hover {
+                        background-color: #218838;
+                    }
+
+                    .top-right-button {
+                        position: absolute;
+                        top: 50px;
+                        right: 100px;
+                        background-color: #28a745;
+                        color: #fff;
+                        padding: 10px 20px;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        transition: background-color 0.3s;
+                    }
+
+                    .top-right-button:hover {
+                        background-color: #218838;
+                    }
                 </style>
             </head>
 
@@ -458,7 +489,7 @@ if ($api->Managers->check_auth() == true) {
 						<span class = "star-avg">
 							<?php 
 							echo "<span class='stars'>$stars</span>";
-							echo "<span class='solving-avg'> $solving_avg</span>";
+							echo "<span class='solving-avg'> $solving_avg min</span>";
 							?>
                         </span>
                     </div>
@@ -471,8 +502,10 @@ if ($api->Managers->check_auth() == true) {
                         <?php echo $description; ?>
                     </div>
 
-                    <a href="<?php echo $link; ?>" class="button button-start" target="_blank">Start the Challenge</a> <!-- Open link in a new tab -->
+                    <a href="<?php echo $link; ?>" class="button button-start" target="_blank">Start the Challenge</a> 
 
+                    
+                    <!-- onclick="location.href='add.php?edit=<?=$r["id"]?>'"> -->
 					<form id="flag-form" action="" method="post">
 						<div id="user-flag" class="input-field"><?php echo $flag; ?></div>
 					</form>
@@ -481,6 +514,7 @@ if ($api->Managers->check_auth() == true) {
                 
                 </div>
 
+                <a href="add.php?edit=<?=$r["id"]?>" class="top-right-button">Редактировать задачу</a>
             </body>
 			
 	<?php
@@ -490,6 +524,6 @@ if ($api->Managers->check_auth() == true) {
 	}
 } else
     require($_SERVER["DOCUMENT_ROOT"] . "/text_noAuth.php");
-// require($_SERVER["DOCUMENT_ROOT"] . "/libs/footer.php");
+require($_SERVER["DOCUMENT_ROOT"] . "/libs/footer.php");
 
 ?>

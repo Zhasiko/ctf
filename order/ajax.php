@@ -26,154 +26,6 @@ if (
 		$no_need = Array('id', 'create_date', 'id_man', 'id_exam', 'id_broker', 'link_man', 'link_man2', 'pdf_num', 'pdf_seriya', 'pdf_file', 'excel_file', 'date_edit_exam', 'status', 'status2', 'id_temp', 'name_temp', 'info_temp', 'd_temp', 'date_oform', 'pdf_file_client', 'hash');
 		
 		if (
-			($_POST['do'] == 'chooseCar')  &&
-			(isset($_POST['field']) && ($_POST['field'] == 'car_type' || $_POST['field'] == 'mark' || $_POST['field'] == 'com_name' || $_POST['field'] == 'year' || $_POST['field'] == 'volume'))
-		)
-		{
-			// досмотрщик не может
-			if ($api->Managers->man_block != 3)
-			{
-				$fields = Array();
-
-				$field = trim($api->Strings->pr($_POST["field"]));	
-				$fields["car_type"] = trim($api->Strings->pr($_POST["car_type"]));	
-				$fields["mark"] = trim($api->Strings->pr($_POST["mark"]));	
-				$fields["com_name"] = trim($api->Strings->pr($_POST["com_name"]));	
-				$fields["year"] = trim($api->Strings->pr($_POST["year"]));	
-				$fields["volume"] = trim($api->Strings->pr($_POST["volume"]));	
-
-				$java_mark = '
-				jQuery("#mark option").remove();
-				jQuery("#mark").append("<option value=\"\">сперва выберите Тип автомобиля </option>");';
-
-				$java_com_name = '
-				jQuery("#com_name option").remove();
-				jQuery("#com_name").append("<option value=\"\">сперва выберите Марку</option>");';
-				
-				$java_year = '
-				jQuery("#year option").remove();
-				jQuery("#year").append("<option value=\"\">сперва выберите Коммерческое наименование </option>");';
-
-				$java_volume = '
-				jQuery("#volume option").remove();
-				jQuery("#volume").append("<option value=\"\">сперва выберите Год выпуска </option>");';
-
-				$info = Array();
-
-				$java = '';
-				if ($field == 'car_type')
-				{
-					$info["field"] = 'mark';
-					$info["opt_name"] = 'Марку';
-					$info["sql"] = "`car_type`='".$fields["car_type"]."'";
-					$info["java_no"] = $java_mark.$java_com_name.$java_year.$java_volume;
-				}
-				else if ($field == 'mark')
-				{
-					$info["field"] = 'com_name';
-					$info["opt_name"] = 'Коммерческое наименование';
-					$info["sql"] = "`car_type`='".$fields["car_type"]."' AND `mark`='".$fields["mark"]."'";				
-					$info["java_no"] = $java_com_name.$java_year.$java_volume;												
-				}
-				else if ($field == 'com_name')
-				{
-					$info["field"] = 'year';
-					$info["opt_name"] = 'Год выпуска';			
-					$info["sql"] = "`car_type`='".$fields["car_type"]."' AND `mark`='".$fields["mark"]."' AND `com_name`='".$fields["com_name"]."'";
-					$info["java_no"] = $java_year.$java_volume;												
-				}
-				else if ($field == 'year')
-				{
-					$info["field"] = 'volume';
-					$info["opt_name"] = 'Объём';	
-					$info["sql"] = "`car_type`='".$fields["car_type"]."' AND `mark`='".$fields["mark"]."' AND `com_name`='".$fields["com_name"]."' AND `year`='".$fields["year"]."'";
-					$info["java_no"] = $java_volume;					
-				}
-
-				$java .= $info["java_no"];
-				if ($fields[$field]!='' && sizeof($info) > 0)
-				{	
-					/*
-					$java .= '
-					jQuery("#'.$info["field"].' option").remove();
-					jQuery("#'.$info["field"].'").append("<option value=\"\">выберите '.$info["opt_name"].'</option>");';
-					*/					
-
-					$s=mysql_query("SELECT `".$info["field"]."` FROM `i_baza` WHERE ".$info["sql"]." GROUP BY `".$info["field"]."` ORDER BY `".$info["field"]."` ASC");
-					if (mysql_num_rows($s) > 0)
-					{										
-						while($r=mysql_fetch_array($s))
-						{
-							$java .= 'jQuery("#'.$info["field"].'").append("<option value=\"'.stripslashes($r[$info["field"]]).'\">'.stripslashes($r[$info["field"]]).'</option>");';
-						}
-
-						$java .= 'jQuery("#'.$info["field"].'").prop("disabled", false);';
-					}
-					else				
-						$java .= '					
-						jQuery("#'.$info["field"].'").prop("disabled", false);';
-				}									
-				
-				$no_need[] = 'car_type';
-				$no_need[] = 'mark';
-				$no_need[] = 'com_name';
-				$no_need[] = 'year';
-				$no_need[] = 'volume';
-				$no_need[] = 'vin';				
-				$no_need[] = 'user_name';
-				$no_need[] = 'user_uyr_adres';
-				$no_need[] = 'user_fac_adres';
-				$no_need[] = 'user_phone';
-				$no_need[] = 'user_fax';
-				$no_need[] = 'user_mail';
-				$no_need[] = 'broker_name';
-				$no_need[] = 'date_issue';
-
-				$table = 'i_baza';
-				$query = "SHOW COLUMNS FROM $table";
-				if ($output = mysql_query($query)):
-					$columns = array();
-					while($result = mysql_fetch_assoc($output)):
-						if (!in_array($result['Field'], $no_need))
-							$columns[] = $result['Field'];
-					endwhile;
-				endif;						
-
-				if ($field == 'volume')
-				{				
-					$s=mysql_query("SELECT * FROM `i_baza` WHERE `car_type`='".$fields["car_type"]."' AND `mark`='".$fields["mark"]."' AND `com_name`='".$fields["com_name"]."' AND `year`='".$fields["year"]."' AND `volume`='".$fields["volume"]."' LIMIT 1");
-					if (mysql_num_rows($s) > 0)
-					{										
-						$r=mysql_fetch_array($s);
-						
-						foreach($columns as $k=>$v)			
-						{
-							$value_baza = str_replace('\\', '', str_replace('\n', '', nl2br(stripslashes($r[$v]))));
-							
-							$java .= 'jQuery("#'.$v.'").val("'.$value_baza.'");';
-						}
-					}
-					else
-					{
-						foreach($columns as $k=>$v)			
-							$java .= 'jQuery("#'.$v.'").val("");';
-					}
-				}	
-				else
-				{
-					foreach($columns as $k=>$v)			
-						$java .= 'jQuery("#'.$v.'").val("");';
-				}
-
-				if ($java != '')
-					echo '
-					<script type="text/javascript">
-						'.$java.'
-					</script>';	
-			}
-		}
-		
-		else if (
 
 			($_POST['do'] == 'add') &&
 			(isset($_POST['task_name']) && $_POST['task_name'] != '') &&
@@ -228,7 +80,7 @@ if (
 					echo '
 					<script type="text/javascript">
 						jQuery(".protocol_add").html("<span style=\"color:#53b374\">Вы успешно добавили задачу</span>");
-						//setTimeout(function() { self.location = "/order/"; }, 2000);
+						setTimeout(function() { self.location = "/order/"; }, 2000);
 					</script>';		
 			}
 			else
@@ -240,102 +92,47 @@ if (
 
 		else if (
 			($_POST['do'] == 'edit') &&
-			(isset($_POST['user_name']) && $_POST['user_name'] != '') &&
-			(isset($_POST['user_iin']) && $_POST['user_iin'] != '') &&
-			(isset($_POST['user_phone']) && $_POST['user_phone'] != '') &&
-			(isset($_POST['id_broker']) && intval($_POST['id_broker']) > 0) &&
-			(isset($_POST['vin']) && $_POST['vin'] != '') &&
-			(
-				(isset($_POST['mark']) && $_POST['mark'] != '') ||
-				(isset($_POST['mark_input]']) && $_POST['mark_input'] != '')
-			) &&
-			(
-				(isset($_POST['com_name']) && $_POST["com_name"] != '') ||
-				(isset($_POST['com_name_input']) && $_POST["com_name_input"] != '') 
-			) &&
-			(
-				(isset($_POST['year']) && $_POST['year'] != '') ||
-				(isset($_POST['year_input']) && $_POST['year_input'] != '') 
-			) &&
-			(
-				(isset($_POST['volume']) && $_POST['volume'] != '') ||
-				(isset($_POST['volume_input']) && $_POST['volume_input'] != '') 
-			) &&
+			(isset($_POST['task_name']) && $_POST['task_name'] != '') &&
+			(isset($_POST['task_type']) && $_POST['task_type'] != '') &&
+			(isset($_POST['level']) && $_POST['level'] != '') &&
+			(isset($_POST['link']) && $_POST['link'] != '') &&
+			(isset($_POST['description']) && $_POST['description'] != '') &&
+			(isset($_POST['flag']) && $_POST['flag'] != '') &&
+			(isset($_POST['points']) && $_POST['points'] != '') &&
+			(isset($_POST['solving_avg']) && $_POST['solving_avg'] != '') &&
 			(isset($_POST['edit']) && intval($_POST['edit']) != 0)
 		)
 		{
-			if ($api->Managers->man_block == 1 || $api->Managers->man_block == 2 || $api->Managers->man_block == 5)
+			if ($api->Managers->man_block == 1 || $api->Managers->man_block == 2 )
 			{			
+
+
+				$task_name = trim($api->Strings->pr($_POST["task_name"]));			
+				$task_type = trim($api->Strings->pr($_POST["task_type"]));
+				$level = trim($api->Strings->pr($_POST["level"]));
+				$link = trim($api->Strings->pr($_POST["link"]));
+				$description = trim($api->Strings->pr($_POST["description"]));
+				$flag = trim($api->Strings->pr($_POST["flag"]));
+				$points = trim($api->Strings->pr($_POST["points"]));
+				$solving_avg = trim($api->Strings->pr($_POST["solving_avg"]));
 				$edit = intval($_POST["edit"]);
+				
+				
+				
+				$sql_update = "UPDATE `i_order` SET `task_name`='".$task_name."', `task_type`='".$task_type."', `link`='".$link."', `description`='".$description."', `level`='".$level."', `flag`='".$flag."', `points`='".$points."', `solving_avg`='".$solving_avg."' WHERE `id`='".$edit."'";
+				$update = mysql_query($sql_update);
+			
+				echo '
+				<script type="text/javascript">
+					jQuery(".protocol_add").html("<span style=\"color:#53b374\">Вы успешно сохранили задачу</span>");
+					setTimeout(function() { self.location = "/order/"; }, 2000);
+				</script>';	
 
-				$table = 'i_order';
-				$query = "SHOW COLUMNS FROM $table";
-				if ($output = mysql_query($query)):
-					$columns = array();
-					while($result = mysql_fetch_assoc($output)):
-						if (!in_array($result['Field'], $no_need))
-							$columns[] = $result['Field'];
-					endwhile;
-				endif;
-
-				$fields = Array(); $sql_ = "";
-				foreach($columns as $k=>$v)
-				{
-					$fields[$v] = str_replace('\\', '', str_replace('\n', '', trim(nl2br($api->Strings->pr($_POST[$v])))));
-					
-					if (
-						($v=='mark' || $v=='com_name' || $v=='year' || $v=='volume') &&
-						(trim($api->Strings->pr($_POST[$v])) == 'прочее')
-					)
-						$fields[$v] = trim($api->Strings->pr($_POST[$v."_input"]));
-
-					//$sql_ .= ($sql_!='' ? ", " : "")."`".$v."`='".addslashes($fields[$v])."'";	
-					$sql_ .= ($sql_!='' ? ", " : "")."`".$v."`=".($fields[$v]=='' ? "NULL" : "'".addslashes($fields[$v])."'");					
-				}																
-				
-				$s = mysql_query("SELECT `pdf_file`, `excel_file`, `pdf_file_client` FROM `i_order` WHERE `id`='".$edit."' LIMIT 1");								
-				$r = mysql_fetch_array($s);	
-				
-				$pdf_file = $r["pdf_file"];
-				$excel_file = $r["excel_file"];
-				$pdf_file = $r["pdf_file_client"];
-				
-				// удалить файл ============
-				if ($pdf_file!='')
-				{
-					$dirFile = $_SERVER['DOCUMENT_ROOT'].'/upload/order/'.$pdf_file;
-					if (is_file($dirFile)) { unlink($dirFile); }
-				}	
-				
-				// удалить excel ============
-				if ($excel_file!='')
-				{
-					$dirFile = $_SERVER['DOCUMENT_ROOT'].'/upload/order/'.$excel_file;
-					if (is_file($dirFile)) { unlink($dirFile); }
-				}	
-				
-				if ($pdf_file_client!='')
-				{
-					$dirFile = $_SERVER['DOCUMENT_ROOT'].'/upload/client_pdf/'.$pdf_file_client;
-					if (is_file($dirFile)) { unlink($dirFile); }
-				}
-				
-				$sql__ = "";
-				if ($api->Managers->man_block == 1 || $api->Managers->man_block == 5)			
-					$sql__ = ", `id_broker`='".intval($_POST['id_broker'])."'";
-				
-				$sql_update = "UPDATE `i_order` SET ".$sql_.", `pdf_file`='', `excel_file`=''".$sql__." WHERE `id`='".$edit."'";
-				$update = mysql_query($sql_update);		
-				
-				//echo '<div style="display:none">'.$sql_update.' -- '.mysql_error().'</div>';
-
-				if ($update)						
-					echo '
-					<script type="text/javascript">
-						jQuery(".protocol_add").html("<span style=\"color:#53b374\">Вы успешно обновили заявку</span>");
-						setTimeout(function() { self.location = "/order/more.php?edit='.$edit.'"; }, 2000);
-					</script>';
-			}			
+			} else
+			echo '
+			<script type="text/javascript">
+				jQuery(".protocol_add").html("<span style=\"color:#f00\">У вас нет прав редактировать задачу</span>");					
+			</script>';			
 		}
 
 		else if (
@@ -343,40 +140,30 @@ if (
 			(isset($_POST['edit']) && intval($_POST['edit']) != 0)
 			)
 		{			
-			if ($api->Managers->man_block == 1 || $api->Managers->man_block == 5)
+			if ($api->Managers->man_block == 1 || $api->Managers->man_block == 2)
 			{
 				$id = intval($_POST["edit"]);
 
-				$s=mysql_query("SELECT `id`, `status` FROM `i_order` WHERE `id`='".$id."'");
+				$s=mysql_query("SELECT `id` FROM `i_order` WHERE `id`='".$id."'");
 				if (mysql_num_rows($s) == 1)
 				{
 					$r=mysql_fetch_array($s);
-					
-					if (intval($r["status"]) == 0)											
-					{
-						include_once($_SERVER["DOCUMENT_ROOT"].'/basket/logs.php');
-						
-						$table = 'i_order';						
-						$id_log = $logs->insertToLogs($table, $id, $api->Managers->man_id);
-						
-						if ($id_log > 0)
-						{
-							$sql_delete = "DELETE FROM `i_order` WHERE `id`='".$r["id"]."'";
-							$delete = mysql_query($sql_delete);
 
-							echo '
-							<script type="text/javascript">
-								jQuery("#protocolDel").html("<span style=\"color:#53b374\">Вы успешно удалили задачу</span>");
-								setTimeout(function() { self.location = "/order/"; }, 50);
-							</script>';
-						}
-						else
-							echo '
-							<script type="text/javascript">
-								jQuery("#protocolDel").html("<span style=\"color:#f00\">Ошибка удаления!</span>");								
-							</script>';
-					}
-				}
+					$sql_delete = "DELETE FROM `i_order` WHERE `id`='".$r["id"]."'";
+					$delete = mysql_query($sql_delete);
+
+					echo '
+					<script type="text/javascript">
+						jQuery(".protocol_del").html("<span style=\"color:#53b374\">Вы успешно удалили задачу</span>");
+						setTimeout(function() { self.location = "/order/"; }, 1000);
+					</script>';
+						
+						
+				} else
+				echo '
+				<script type="text/javascript">
+					jQuery(".protocol_del").html("<span style=\"color:#f00\">Ошибка удаления!</span>");								
+				</script>';
 			}
 		}
 		

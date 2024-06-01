@@ -2,22 +2,25 @@
 $lang="ru";
 $title="Создать задачу";
 if (isset($_GET["edit"]) && intval($_GET["edit"])!=0)
-	$title="Редактировать заявку";
+	$title="Редактировать задачу";
 $keywords="";
 $description="";
 require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
 if ($api->Managers->check_auth() == true)
 {
 	if (
-		($api->Managers->man_block == 4 && !isset($_GET["edit"])) ||
+		($api->Managers->man_block == 4 && isset($_GET["edit"])) ||
 		(
 			($api->Managers->man_block == 1 || $api->Managers->man_block == 2 || $api->Managers->man_block == 5) //&&
 			//(isset($_GET["edit"]) && intval($_GET["edit"])!=0)
 		)
 	)
 	{
+
+		
+
 		?>
-		<div class="card">            
+		<div class="card">
 			<?
 			$no_need = Array('id', 'create_date', 'id_man', 'id_exam', 'id_broker', 'link_man', 'link_man2', 'pdf_num', 'pdf_seriya', 'pdf_file', 'excel_file', 'date_edit_exam', 'status', 'status2', 'id_temp', 'name_temp', 'info_temp', 'd_temp', 'date_oform', 'pdf_file_client', 'hash');
 			$table = 'i_order';
@@ -41,125 +44,8 @@ if ($api->Managers->check_auth() == true)
 			
 			$uvesos = 0;
 			$mark_option = ''; $year_option = ''; $com_name_option = ''; $type_option = '';
-			$can_edit = 0; 
-			if (
-				(
-					$api->Managers->man_block == 1 || // админ 
-					$api->Managers->man_block == 2 || $api->Managers->man_block == 5 // менеджеры
-				) &&
-				(isset($_GET["edit"]) && intval($_GET["edit"])!=0)
-			)
-			{		
-				$sql_wh = "";
-				if ($api->Managers->man_block == 2)
-					$sql_wh = " AND (`status`=2 OR `status`=4)";
-				
-				$id_company = 0;
-				$s=mysql_query("SELECT * FROM `i_order` WHERE `id`='".intval($_GET["edit"])."'".$sql_wh." LIMIT 1");
-				if (mysql_num_rows($s) > 0)
-				{
-					$r=mysql_fetch_array($s);
-					
-					$can_edit = 1;
-					$uvesos = intval($r["uvesos"]);										
-					$id_company = intval($r["id_broker"]);		
-					
-					foreach($columns as $k=>$v)				
-						$fields[$v] = stripslashes($api->Strings->pr_plus($r[$v]));
-					
-					$have_op = 0;
-					$sM=mysql_query("SELECT `level` FROM `i_baza` WHERE `task_type`='".$r["task_type"]."' GROUP BY `level` ORDER BY `level` ASC");
-					if (mysql_num_rows($sM) > 0)
-					{								
-						$mark_option .= '<option value=""> выберите Тип </option>';
-						while($rM=mysql_fetch_array($sM))
-						{
-							$selected = '';
-							if (stripcslashes($rM["level"]) == stripcslashes($r["level"]))
-							{
-								$selected = ' selected';
-								$have_op++;
-							}
-							
-							$mark_option .= '<option value="'.stripcslashes($rM["level"]).'"'.$selected.'> '.stripcslashes($rM["level"]).' </option>';
-						}													
-					}
-					
-					if ($have_op == 0)
-						$mark_option .= '<option value="'.stripcslashes($r["level"]).'" selected> '.stripcslashes($r["level"]).' </option>';		
-					
-					
-					$have_op = 0;
-					$sC=mysql_query("SELECT `com_name` FROM `i_baza` WHERE `task_type`='".$r["task_type"]."' AND `level`='".$r["level"]."' GROUP BY `com_name` ORDER BY `com_name` ASC");
-					if (mysql_num_rows($sC) > 0)
-					{		
-						
-						$com_name_option .= '<option value=""> выберите Тип </option>';
-						while($rC=mysql_fetch_array($sC))
-						{
-							$selected = '';
-							if (stripcslashes($rM["com_name"]) == stripcslashes($r["com_name"]))
-							{
-								$selected = ' selected';
-								$have_op++;
-							}
-							
-							$com_name_option .= '<option value="'.stripcslashes($rC["com_name"]).'"'.$selected.'> '.stripcslashes($rC["com_name"]).' </option>';
-						}														
-					}
-					
-					if ($have_op == 0)
-						$com_name_option .= '<option value="'.stripcslashes($r["com_name"]).'" selected> '.stripcslashes($r["com_name"]).' </option>';	
-					
-					$have_op = 0;
-					$sY=mysql_query("SELECT `year` FROM `i_baza` WHERE `task_type`='".$r["task_type"]."' AND `level`='".$r["level"]."' AND `com_name`='".$r["com_name"]."' GROUP BY `year` ORDER BY `year` ASC");
-					if (mysql_num_rows($sY) > 0)
-					{								
-						$year_option .= '<option value=""> выберите Год выпуска </option>';
-						while($rY=mysql_fetch_array($sY))
-						{
-							$selected = '';
-							if (stripcslashes($rM["year"]) == stripcslashes($r["year"]))
-							{
-								$selected = ' selected';
-								$have_op++;
-							}
-							
-							$year_option .= '<option value="'.stripcslashes($rY["year"]).'"'.$selected.'> '.stripcslashes($rY["year"]).' </option>';
-						}													
-					}
-					
-					if ($have_op == 0)
-						$year_option .= '<option value="'.stripcslashes($r["year"]).'" selected> '.stripcslashes($r["year"]).' </option>';		
-					
-					$have_op = 0;
-					$sV=mysql_query("SELECT `volume` FROM `i_baza` WHERE `task_type`='".$r["task_type"]."' AND `level`='".$r["level"]."' AND `com_name`='".$r["com_name"]."' AND `year`='".$r["year"]."' GROUP BY `volume` ORDER BY `volume` ASC");
-					if (mysql_num_rows($sV) > 0)
-					{								
-						$volume_option = '<option value=""> выберите Тип </option>';
-						while($rV=mysql_fetch_array($sV))
-						{
-							$selected = '';
-							if (stripcslashes($rM["volume"]) == stripcslashes($r["volume"]))
-							{
-								$selected = ' selected';
-								$have_op++;
-							}
-							
-							$volume_option .= '<option value="'.stripcslashes($rV["volume"]).'"'.$selected.'> '.stripcslashes($rV["volume"]).' </option>';
-						}														
-					}
-					
-					if ($have_op == 0)
-						$volume_option .= '<option value="'.stripcslashes($r["volume"]).'" selected> '.stripcslashes($r["volume"]).' </option>';	
-				}
-				/*
-				foreach($columns as $k=>$v)
-				{
-					$dis_field[$v] = '';										
-				}
-				*/
-			}
+			
+			
 		
 			if (
 				(
@@ -207,6 +93,39 @@ if ($api->Managers->check_auth() == true)
 			$dis_field["description"] = '';
 			$dis_field["points"] = '';
 			$dis_field["flag"] = '';
+
+			$can_edit = 0;
+
+			if (isset($_GET["edit"]) && intval($_GET["edit"]) != 0)
+			{
+				$can_edit = 1;
+				$sql_ = '';										
+				$s=mysql_query("SELECT * FROM `i_order` WHERE `id`='".intval($_GET["edit"])."'".$sql_." ORDER BY `id` ASC LIMIT 1");
+				if (mysql_num_rows($s) > 0)
+				{
+					
+					$r=mysql_fetch_array($s);
+
+					$dis_field["task_name"] = $r["task_name"];
+					$dis_field["task_type"] = $r["task_type"];
+					$dis_field["solving_avg"] = $r["solving_avg"];
+					$dis_field["link"] = $r["link"];
+					$dis_field["description"] = $r["description"];
+					$dis_field["points"] = $r["points"];
+					$dis_field["level"] = $r["level"];
+					$dis_field["flag"] = $r["flag"];
+					
+					// print_r($dis_field);
+					// $hashed_password = password_hash($password_value, PASSWORD_DEFAULT);
+					
+				}
+				// print_r($active_value); echo "<br>";
+				// print_r($event_name_value); echo "<br>";
+				// print_r($description_value); echo "<br>";
+				// print_r($date_value); echo "<br>";
+				// print_r($link_value); echo "<br>";
+			}
+
 			?>                
             <style>
 				body {
@@ -310,26 +229,26 @@ if ($api->Managers->check_auth() == true)
 						
 						<? if ($v == 'task_type') { ?>
 						<select class="form-control" id="<?=$v?>">
-							<option value="" style = "color: white !important;"> выберите тип </option>
-							<option value="stegano"<?=($fields[$v] == 'stegano' ? ' selected' : '')?>> stegano </option>
-							<option value="web"<?=($fields[$v] == 'web' ? ' selected' : '')?>> web </option>
-							<option value="crypto"<?=($fields[$v] == 'crypto' ? ' selected' : '')?>> crypto </option>
-							<option value="прочее"<?=($fields[$v] == 'прочее' ? ' selected' : '')?>> прочее </option>
-						</select>						
+							<option value="" style="color: white !important;"> выберите тип </option>
+							<option value="stegano"<?=($dis_field[$v] == 'stegano' ? ' selected' : '')?>> stegano </option>
+							<option value="web"<?=($dis_field[$v] == 'web' ? ' selected' : '')?>> web </option>
+							<option value="crypto"<?=($dis_field[$v] == 'crypto' ? ' selected' : '')?>> crypto </option>
+							<option value="прочее"<?=($dis_field[$v] == 'прочее' ? ' selected' : '')?>> прочее </option>
+						</select>					
 						<? } else if ($v == 'level') { ?>
 						<div id="<?=$v?>_bl"<?=($fields["task_type"]=='прочее' ? ' style="display:none;"' : '')?>>
-						<select class="form-control" id="<?=$v?>">
-							<option value=""> выберите сложность </option>
-							<option value="easy"<?=($fields[$v] == 'easy' ? ' selected' : '')?>> easy </option>
-							<option value="medium"<?=($fields[$v] == 'medium' ? ' selected' : '')?>> medium </option>
-							<option value="hard"<?=($fields[$v] == 'hard' ? ' selected' : '')?>> hard </option>
-						</select>	
+							<select class="form-control" id="<?=$v?>">
+								<option value=""> выберите сложность </option>
+								<option value="easy"<?=($dis_field[$v] == 'easy' ? ' selected' : '')?>> easy </option>
+								<option value="medium"<?=($dis_field[$v] == 'medium' ? ' selected' : '')?>> medium </option>
+								<option value="hard"<?=($dis_field[$v] == 'hard' ? ' selected' : '')?>> hard </option>
+							</select>    
 						</div>
 						<? } else { ?>
 							<? if ($type_field[$v] == 'input') { ?>
-                        <input type="text" class="form-control<?=($v=='user_phone' ? ' phone' : '').($v=='date_issue' ? ' dateInput' : '').($v=='user_iin' ? ' only_int' : '').($v=='solving_avg' ? ' solving_avg' : '')?>"<?=($v=='solving_avg' ? ' maxlength="17"' : '').($v=='user_iin' ? ' maxlength="12"' : '')?> id="<?=$v?>" value="<?=$fields[$v]?>"<?=$dis_field[$v]?> />
+                        <input type="text" class="form-control<?=($v=='user_phone' ? ' phone' : '').($v=='date_issue' ? ' dateInput' : '').($v=='user_iin' ? ' only_int' : '').($v=='solving_avg' ? ' solving_avg' : '')?>"<?=($v=='solving_avg' ? ' maxlength="17"' : '').($v=='user_iin' ? ' maxlength="12"' : '')?> id="<?=$v?>" value="<?=$dis_field[$v]?>" />
 							<? } else { ?>
-						<textarea class="form-control" id="<?=$v?>"<?=$dis_field[$v]?>><?=str_replace('\n', '&#13;', $fields[$v])?></textarea>
+						<textarea class="form-control" id="<?=$v?>"<?=$dis_field[$v]?>><?=str_replace('\n', '&#13;', $dis_field[$v])?></textarea>
 							<? } ?>
 						<? } ?>
                         <span class="control__help" id="error_<?=$v?>"></span>
@@ -354,49 +273,20 @@ if ($api->Managers->check_auth() == true)
 				
 			<div class="card-action t-right">
 				<a class="btn btn-warning" style="float:left" href="javascript:history.go(-1)">Вернуться назад</a>
+				<? if (isset($_GET["edit"]) && intval($_GET["edit"]) != 0) { ?>
+                	<button type="button" class="btn btn-danger action"  style="margin-right:50px" onclick="deleteTask();">Удалить</button>
+                <? } ?>
                 <button class="btn btn-success action" onclick="addZ();"><?=($can_edit == 1 ? 'Сохранить' : 'Добавить')?></button>
                 <div class="loading">
                     <img src="/library/img/load.gif" /> Ваш запрос обрабатывается...
                 </div>
                 <div class="protocol_add"></div>
+				<div class="protocol_del"></div>
             </div>
 
 		</div>
 		<script type="text/javascript">
 						
-			function choosePhone()
-			{
-				var phone_new = jQuery("#dir_phone").val();
-				
-				jQuery("#user_phone").val(phone_new);
-			}
-			
-			function chooseCar(field)
-			{
-				var err_key = 0;
-				var focused = 0;
-				
-				jQuery(".card-body select").css("border-color", "#c9cbcd");
-				
-				<?php /*?>if (jQuery("#"+field).val() == '')				
-					err_key = 1;<?php */?>									
-					
-					if (err_key == 0)
-					{
-						jQuery.ajax(
-						{
-							url: "ajax.php",
-							data: "do=chooseCar&field="+field+"&task_type="+jQuery("#task_type").val()+"&level="+jQuery("#level").val()+"&com_name="+jQuery("#com_name").val()+"&volume="+jQuery("#volume").val()+"&year="+jQuery("#year").val()+"&x=secure",
-							type: "POST",
-							dataType : "html",
-							cache: false,
-
-							beforeSend: function()		{ jQuery(".protocol_add").html("");  jQuery("#load_"+field).show(); },
-							success:  function(data)	{ jQuery(".protocol_add").html(data); jQuery("#load_"+field).hide(); },
-							error: function()			{ alert("Невозможно связаться с сервером"); jQuery("#load_"+field).hide(); }
-						});
-					}
-			}
 			
 			function addZ() {
 				var err_key = 0;
@@ -421,7 +311,26 @@ if ($api->Managers->check_auth() == true)
 							jQuery("#error_<?=$k?>").html('Не заполнено поле <?=$name_ru[$k]?>').css("display", "inline-block");
 							if (focused == 0) { jQuery("#<?=$k?>_input").focus(); focused = 1; }
 						}
-					<? } else { ?>
+					<?} else if($k == "points"){?>
+						if (jQuery("#points").val() == '')
+						{
+							err_key = 1;
+							jQuery("#points").css("border-color", "#f00");
+							jQuery("#error_points").html('Не заполнено поле points').css("display", "inline-block");
+							if (focused == 0) { jQuery("#points").focus(); focused = 1; }
+						} else {
+							var password = jQuery("#points").val();
+							var regex = /^\d+$/;
+
+							if (!regex.test(password)) {
+								err_key = 1;
+								jQuery("#points").css("border-color", "#f00");
+								jQuery("#error_points").html('Балл должен состоять только из цифр').css("display", "inline-block");
+								if (focused == 0) { jQuery("#points").focus(); focused = 1; }
+							}
+						}
+				
+					<?} else { ?>
 						<? if ($v == 1 && $k != 'solving_avg') { ?>
 							if (jQuery("#<?=$k?>").val() == '') {
 								err_key = 1;
@@ -475,6 +384,33 @@ if ($api->Managers->check_auth() == true)
 				}
 			} 
 		
+			<? if (isset($_GET["edit"]) && intval($_GET["edit"]) != 0) { ?>
+				function deleteTask() {
+					jQuery.ajax(
+						{
+							url: "ajax.php",
+							data: "do=delete&edit=<?=intval($_GET["edit"])?>&x=secure",
+							type: "POST",
+							dataType : "html",
+							cache: false,
+
+							beforeSend: function() { 
+								jQuery(".protocol_del").html(""); 
+								jQuery(".action").hide(); 
+								jQuery(".loading").show(); 
+							},
+							success: function(data) { 
+								jQuery(".protocol_del").html(data); 
+								jQuery(".loading").hide(); 
+							},
+							error: function() { 
+								alert("Невозможно связаться с сервером"); 
+								jQuery(".action").show(); 
+								jQuery(".loading").hide(); 
+							}
+					});
+				} 
+			<? } ?>
 
 		</script>
 		<?
