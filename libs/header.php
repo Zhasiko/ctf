@@ -20,7 +20,7 @@ $api->Managers->pr_cookieM();
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
 	<meta name="format-detection" content="telephone=no">
 	<meta name="HandheldFriendly" content="true">
-	<link rel="shortcut icon" href="/library/img/favicon.ico">
+	<link rel="shortcut icon" href="/library/img/logo_.png">
 	<script type="text/javascript" src="/library/js/plugin/webfont/webfont.min.js"></script>
 	<script type="text/javascript">
 		WebFont.load({

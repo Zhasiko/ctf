@@ -22,6 +22,10 @@ html, body {
     margin-right: 50px; 
 }
 
+.photo-container:hover {
+    transform: scale(1.1);
+}
+
 .photo {
     max-width: 100%;
     height: auto;
@@ -79,7 +83,7 @@ html, body {
 }
 
 .btn-login {
-    background: #8B0000;
+    background: rgb(1, 103, 1);
     margin-top: 30px;
     color: #FFFFFF;
     border: none;
@@ -98,5 +102,5 @@ html, body {
     margin-right: 30px;
 }
 .btn-login:hover {
-    background: #A40505;
+    transform: scale(1.1);
 }

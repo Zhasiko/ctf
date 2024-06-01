@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <div class="photo-container">
-            <p class="center"><a href="/"><img style="max-width:100%;" src="/library/img/logo.png" alt="Logo" /></a></p>
+            <p class="center" ><a href="https://kbtu.edu.kz/" target="_blank"><img style="max-width:100%;" src="/library/img/logo.png" alt="Logo" /></a></p>
         </div>
         <div class="form-container">
             

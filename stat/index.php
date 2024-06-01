@@ -14,12 +14,14 @@ if ($api->Managers->check_auth() == true) {
     $crypto_solved = 0;
     $etc_solved = 0;
 
-    $sql_query = "SELECT * FROM `i_solved`";
+    if($api->Managers->man_block == 3){
+        $sql_query = "SELECT * FROM `i_solved` where `user_id` =".$api->Managers->man_id;
+    }
+    else{
+        $sql_query = "SELECT * FROM `i_solved`";
+    }
     $s=mysql_query($sql_query);
     $total_solved = mysql_num_rows($s);
-    $total_solved_user = 0;
-    
-
 
     if ($total_solved > 0)
     {
@@ -37,9 +39,6 @@ if ($api->Managers->check_auth() == true) {
            if($r['category'] == 'прочее'){
                 $etc_solved = $etc_solved + 1;
            }
-           if($r['user_id'] == $user_id){
-            $total_solved_user = $total_solved_user + 1;
-            }
         }
         $solved = array(
             'Стеганография' => $stegano_solved,
@@ -56,6 +55,7 @@ if ($api->Managers->check_auth() == true) {
         if($r['task_type'] == 'crypto'){
             $total_crypto = $r['count'];
             $procent_crypto = $crypto_solved / $total_crypto * 100;
+
         }
         if($r['task_type'] == 'web'){
             $total_web = $r['count'];
@@ -70,9 +70,21 @@ if ($api->Managers->check_auth() == true) {
             $procent_etc = $etc_solved / $total_etc * 100;
         }
     }
+    if(!isset($procent_crypto)){
+        $procent_crypto = 0;
+    }
+    if(!isset($procent_web)){
+        $procent_web = 0;
+    }
+    if(!isset($procent_stegano)){
+        $procent_stegano = 0;
+    }
+    if(!isset($procent_etc)){
+        $procent_etc = 0;
+    }
     // Сбор процентов в массив
     $percentages = array(
-        'Стеганография' => isset($procent_stegano),
+        'Стеганография' => $procent_stegano,
         'Веб' => $procent_web,
         'Криптография' => $procent_crypto,
         'Прочее' => $procent_etc
@@ -206,9 +218,15 @@ if ($api->Managers->check_auth() == true) {
         <?php
             $sql_query= "SELECT * FROM `i_order`";
             $s=mysql_query($sql_query);
-            $all_tasks_cnt = mysql_num_rows($s);
+            $all_points = 0;
+            while($r=mysql_fetch_array($s))
+            {
+                $all_points = $r['points'] + $all_points;
+            }
 
-            $user_procent = $total_solved_user / $all_tasks_cnt * 100;
+            $all_tasks_cnt = mysql_num_rows($s);
+            $user_procent = $total_solved / $all_tasks_cnt * 100;
+            if($api->Managers->man_block == 3){
         ?>
         <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center;"> <!-- Изменяем размер карты на 200x200 пикселей и применяем flex-контейнер -->
             <h2>% Решенных задач пользователя</h2>
@@ -218,21 +236,52 @@ if ($api->Managers->check_auth() == true) {
             <p >% ваших решенных задач: <?php echo $user_procent?>%</p> <!-- Добавляем отступ сверху в 10px -->
         </div>
         <?php
-            $avg_solved = $total_solved / $all_tasks_cnt * 100;
+            }
         ?>
         <div>
+
+        <?php
+            $sql_query = "SELECT points FROM `i_manager_users` where `id` =".$api->Managers->man_id;
+            $s=mysql_query($sql_query);
+            while($r=mysql_fetch_array($s))
+            {
+                $user_points = $r['points'];
+            }
+
+            $sql_query = "SELECT DISTINCT `task_id` FROM `i_solved`";
+            $s=mysql_query($sql_query);
+            $total_solved_unique = mysql_num_rows($s);
+            $avg_solved_unique = $total_solved_unique / $all_tasks_cnt * 100;
+            if($api->Managers->man_block == 3){
+        ?>
         <div class="card" style="height: 220px;">
-            <h2>КОЛ-ВО МОИХ РЕШЕННЫХ ЗАДАЧ</h2>
-            <p><?php echo "Количество: ". $total_solved?></p>
-            <p><?php echo $avg_solved. "% от общего (". $all_tasks_cnt.')'?></p>
+            <h2>КОЛ-ВО МОИХ БАЛЛОВ ОТ МАКСИМАЛЬНОГО</h2>
+            <p><?php echo "Количество ваших баллов: ". $user_points?></p>
+            <p><?php echo "Макс количество баллов: ". $all_points?></p>
         </div>
-        <div class="card">
-            <h2>CРЕД КОЛ-ВО РЕШЕННЫХ ЗАДАЧ ПОЛЬЗОВАТЕЛЯМИ</h2>
-            <p><?php echo "Количество: 2"?></p> 
-            <!-- . $total_solved -->
-            <p><?php echo  "40% от общего (5)"?></p>
-            <!-- $avg_solved. -->
-            <!-- . $all_tasks_cnt.' -->
+        <?php
+            }else{
+        ?>
+        <div class="card" style="height: 220px;">
+            <h2>КОЛ-ВО РЕШЕННЫХ УНИКАЛЬНЫХ ЗАДАЧ</h2>
+            <p><?php echo "Количество решенных задач: ". $total_solved_unique?></p>
+            <p><?php echo "Количество всех задач: ". $all_tasks_cnt?></p>
+            <p><?php echo $avg_solved_unique. "% от общего (". $all_tasks_cnt.')'?></p>
+        </div>
+        <?php
+            }
+            $sql_query = "SELECT * FROM `i_manager_users` where `id_section` = 3";
+            $s=mysql_query($sql_query);
+            $students_cnt = mysql_num_rows($s);
+
+            $avg_students_solved = $total_solved / $students_cnt; 
+            $avg_students_solved = round($avg_students_solved, 1);
+        ?>
+       <div class="card" style="height: 222px; padding: 10px; overflow: hidden;">
+            <h2 style="font-size: 16px;">CРЕД КОЛ-ВО РЕШЕННЫХ ЗАДАЧ ПОЛЬЗОВАТЕЛЯМИ</h2>
+            <p style="margin: 5px 0;"><?php echo "Количество задач: ".$total_solved ?></p>
+            <p style="margin: 5px 0;"><?php echo "Количество студентов: ".$students_cnt ?></p>
+            <p style="margin: 5px 0;"><?php echo round($avg_students_solved, 1). " задач в среднем" ?></p>
         </div>
         </div>  
     </div>
