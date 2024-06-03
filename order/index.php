@@ -202,6 +202,7 @@ if ($api->Managers->check_auth() == true)
 						$koll = mysql_num_rows(mysql_query("SELECT * ".$sql_));
 																													
 						?>
+						<h2>Количество задач: <? echo mysql_num_rows($s)?></h2>
 						<table id="basic-datatables" class="display table table-striped table-hover dataTable">
 							<thead>
 								<tr>									
@@ -219,6 +220,7 @@ if ($api->Managers->check_auth() == true)
 								</tr>
 							</thead>
 						<?
+						
 						while($r=mysql_fetch_array($s))
 						{							
 							$link = '';							
@@ -247,6 +249,7 @@ if ($api->Managers->check_auth() == true)
 							
 				
 							?>
+							
 							<tr role="row" class="<?=(($i%2)==1 ? 'odd' : 'even')?>" style="height: 35px; @media screen and (max-width: 767px) { height: auto; }; ">																
 								<td<?=$link?> nowrap="nowrap"><?=$r["id"]?></td>
 								<td<?=$link?> nowrap="nowrap"><?=$date?></td>
