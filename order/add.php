@@ -6,6 +6,7 @@ if (isset($_GET["edit"]) && intval($_GET["edit"])!=0)
 $keywords="";
 $description="";
 require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
+
 if ($api->Managers->check_auth() == true)
 {
 	if (
@@ -63,7 +64,7 @@ if ($api->Managers->check_auth() == true)
 			$name_ru = Array();				
 			$name_ru["task_name"] = 'Название Задачи';
 			$name_ru["task_type"] = 'Категория Задачи';
-			$name_ru["solving_avg"] = 'Средняя время для выполнения';
+			$name_ru["solving_avg"] = 'Среднее время для выполнения';
 			$name_ru["level"] = 'Сложность';
 			$name_ru["link"] = 'Ссылка задачи';
 			$name_ru["description"] = 'Описание';

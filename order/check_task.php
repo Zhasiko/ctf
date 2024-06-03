@@ -1,6 +1,7 @@
 <?
 header('Content-Type: text/html; charset=utf-8');
 $lang = 'ru';
+
 if (
 	isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') &&
 	isset($_POST['x']) && ($_POST['x']=='secure')
@@ -8,6 +9,8 @@ if (
 {
     include_once($_SERVER['DOCUMENT_ROOT']."/libs/mysql.php");
     include_once($_SERVER['DOCUMENT_ROOT']."/libs/api.php");
+
+    require_once '../get_encr_key.php';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && 
     isset($_POST['id']) && $_POST["id"] != '' &&
@@ -27,7 +30,8 @@ if (
         
         if (mysql_num_rows($s) > 0) {
             $r = mysql_fetch_array($s);
-            $flag = $r["flag"];
+            $flag = decryptPassword($r["flag"], $encryption_key);
+            echo $flag;
             $points = $r["points"];
             $correctFlag = trim($flag);
         }

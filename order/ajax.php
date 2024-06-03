@@ -4,6 +4,8 @@
 //ini_set('display_startup_errors', 1);
 header('Content-Type: text/html; charset=utf-8');
 $lang = 'ru';
+
+
 if (
 	isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') &&
 	isset($_POST['do']) &&
@@ -13,7 +15,8 @@ if (
 
 	include_once($_SERVER['DOCUMENT_ROOT']."/libs/mysql.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/libs/api.php");
-
+	require_once '../get_encr_key.php';
+	
 	if (
 		$api->Managers->check_auth() == true &&
 		(
@@ -62,8 +65,12 @@ if (
 				{
 					$fields[$v] = str_replace('\\', '', str_replace('\n', '', trim(nl2br($api->Strings->pr($_POST[$v])))));
 					
+					if($v == 'flag'){
+						$fields[$v] = encryptPassword(trim($api->Strings->pr($_POST["flag"])), $encryption_key);
+					} else{
 						$fields[$v] = trim($api->Strings->pr($_POST[$v]));	
-						
+					}
+					
 					$sql_field .= ($sql_field!='' ? ", " : "")."`".$v."`";
 					$sql_value .= ($sql_value!='' ? ", " : "")."".($fields[$v]=='' ? "NULL" : "'".addslashes($fields[$v])."'");
 				}						

@@ -6,6 +6,7 @@ $title = "Задача #" . $_GET["id"];
 $keywords = "";
 $description = "";
 require($_SERVER["DOCUMENT_ROOT"] . "/libs/header.php");
+require_once '../get_encr_key.php';
 
 if ($api->Managers->check_auth() == true) {
     if (
@@ -14,6 +15,9 @@ if ($api->Managers->check_auth() == true) {
         ) &&
         (isset($_GET["id"]) && intval($_GET["id"]) != 0)
     ) {
+
+        
+
 		$user_id = $api->Managers->man_id;
 		// echo $user_id;
 		// echo "hello";
@@ -301,7 +305,7 @@ if ($api->Managers->check_auth() == true) {
             $link = $r["link"];
             $description = $r["description"];
             $points = $r["points"];
-            $flag = $r["flag"];
+            $flag = decryptPassword($r["flag"], $encryption_key);
             $task_type = $r["task_type"];
             $level = $r["level"];
             $solving_avg = $r["solving_avg"];
