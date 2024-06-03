@@ -40,11 +40,12 @@ if ($api->Managers->check_auth() == true)
             <div class="card-body">
                 <div class="table-responsive">
                     <div id="basic-datatables_wrapper" class="dataTables_wrapper dt-bootstrap4">
-					<?	
+					<?
                     $s=mysql_query("SELECT * FROM `i_manager_users` WHERE `id_section`=3 ORDER BY `points` DESC");
                     if (mysql_num_rows($s) > 0)
                     {
                         ?>
+                        <h2>Количество студентов: <? echo mysql_num_rows($s)?></h2>
                         <table id="basic-datatables" class="display table table-striped table-hover dataTable">
         					<thead>
                                 <tr>
