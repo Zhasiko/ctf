@@ -30,8 +30,7 @@ if (
         
         if (mysql_num_rows($s) > 0) {
             $r = mysql_fetch_array($s);
-            $flag = decryptPassword($r["flag"], $encryption_key);
-            echo $flag;
+            $flag = decryptPassword($r["flag"], $encryption_key);            
             $points = $r["points"];
             $correctFlag = trim($flag);
         }
