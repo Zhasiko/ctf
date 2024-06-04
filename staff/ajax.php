@@ -105,7 +105,7 @@ if (
 			$cat = intval($_POST["cat"]);
 			$name = trim($api->Strings->pr($_POST["name"]));
 			$login = trim($api->Strings->pr($_POST["login"]));
-			$pass = trim($api->Strings->pr($_POST["pass"]));
+			$pass = encryptPassword(trim($api->Strings->pr($_POST["pass"])), $encryption_key);
 			$phone = trim($api->Strings->pr($_POST["phone"]));
 			$edit = intval($_POST["edit"]);
 			
