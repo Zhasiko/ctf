@@ -17,7 +17,7 @@ if ($api->Managers->check_auth() == true)
 		)
 	)
 	{
-
+		require_once '../get_encr_key.php';
 		
 
 		?>
@@ -114,7 +114,7 @@ if ($api->Managers->check_auth() == true)
 					$dis_field["description"] = $r["description"];
 					$dis_field["points"] = $r["points"];
 					$dis_field["level"] = $r["level"];
-					$dis_field["flag"] = $r["flag"];
+					$dis_field["flag"] = $flag = decryptPassword($r["flag"], $encryption_key);
 					
 					// print_r($dis_field);
 					// $hashed_password = password_hash($password_value, PASSWORD_DEFAULT);

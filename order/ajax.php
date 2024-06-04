@@ -119,7 +119,7 @@ if (
 				$level = trim($api->Strings->pr($_POST["level"]));
 				$link = trim($api->Strings->pr($_POST["link"]));
 				$description = trim($api->Strings->pr($_POST["description"]));
-				$flag = trim($api->Strings->pr($_POST["flag"]));
+				$flag =  encryptPassword(trim($api->Strings->pr($_POST["flag"])), $encryption_key);
 				$points = trim($api->Strings->pr($_POST["points"]));
 				$solving_avg = trim($api->Strings->pr($_POST["solving_avg"]));
 				$edit = intval($_POST["edit"]);
