@@ -1,5 +1,5 @@
 <?
-require_once '../get_encr_key.php';
+
 
 
 
@@ -15,7 +15,8 @@ if (
 
 	include_once($_SERVER['DOCUMENT_ROOT']."/libs/mysql.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/libs/api.php");
-
+	require_once '../get_encr_key.php';
+	
 	if (
 		$api->Managers->check_auth() == true &&
 		$api->Managers->man_block == 1

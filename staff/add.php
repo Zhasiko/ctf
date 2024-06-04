@@ -1,6 +1,6 @@
 <?
 
-require_once '../get_encr_key.php';
+
 
 
 $lang="ru";
@@ -10,10 +10,13 @@ if (isset($_GET["edit"]) && intval($_GET["edit"])!=0)
 $keywords="";
 $description="";
 require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
+
 if ($api->Managers->check_auth() == true)
 {
+	require_once '../get_encr_key.php';
 	if ($api->Managers->man_block == 1)
 	{
+		
 		?>
 		 <style>
 

@@ -1,5 +1,5 @@
 <?php
-require_once '../get_encr_key.php';
+
 
 $lang = "ru";
 $title = "Статистика";
@@ -8,6 +8,10 @@ $description = "";
 require($_SERVER["DOCUMENT_ROOT"] . "/libs/header.php");
 
 if ($api->Managers->check_auth() == true) {
+
+    require_once '../get_encr_key.php';
+
+    
     $user_id = $api->Managers->man_id;
     $stegano_solved = 0;
     $web_solved = 0;

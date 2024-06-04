@@ -1,5 +1,5 @@
 <?
-require_once '../get_encr_key.php';
+
 
 
 header('Content-Type: text/html; charset=utf-8');
@@ -13,7 +13,7 @@ if (
 
 	include_once($_SERVER['DOCUMENT_ROOT']."/libs/mysql.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/libs/api.php");
-    
+    require_once '../get_encr_key.php';
 	if (
 		$api->Managers->check_auth() == true &&
 		$api->Managers->man_block == 1 || $api->Managers->man_block == 2

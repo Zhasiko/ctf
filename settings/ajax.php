@@ -10,6 +10,7 @@ if (
 	include_once($_SERVER["DOCUMENT_ROOT"].'/libs/mysql.php');
 	include_once($_SERVER["DOCUMENT_ROOT"].'/libs/api.php');
 
+	require_once '../get_encr_key.php';
 	if (
 		$api->Managers->check_auth() == true
 	)
@@ -34,14 +35,17 @@ if (
 			if (mysql_num_rows($s) > 0)
 				$r=mysql_fetch_array($s);
 
+			
 			$sql_pas = ""; $up = 1;
+			
 			if ($pass_old != '')
 			{
-
+				$r[$pole] = decryptPassword($r[$pole], $encryption_key);
 				if ($pass_old == $r[$pole])
 				{
 					if ($pass == $r[$pole])
 					{
+
 						$up = 0;
 						echo '
 						<script type="text/javascript">
@@ -49,7 +53,7 @@ if (
 						</script>';
 					}
 					else
-						$sql_pas = "`".$pole."`='".$pass."'";
+						$sql_pas = "`".$pole."`='".encryptPassword($pass, $encryption_key)."'";
 				}
 				else
 				{

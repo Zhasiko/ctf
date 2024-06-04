@@ -4,6 +4,7 @@ $title="Изменить пароль";
 $keywords="";
 $description="";
 require($_SERVER["DOCUMENT_ROOT"]."/libs/header.php");
+
 if ($api->Managers->check_auth() == true) {
 ?>
 <style>
@@ -74,7 +75,7 @@ if ($api->Managers->check_auth() == true) {
 			if ((jQuery("#user_pass1").val() == '') || (jQuery("#user_pass1").val().length < 8))  
 			{ 
 				err_key = 1; 
-				jQuery("#user_pass_info1").html('не верно указан  Пароль, пароль должен быть не короче 8 символов').css("display", "inline-block"); 
+				jQuery("#user_pass_info1").html('Пароль должен быть не короче 8 символов').css("display", "inline-block"); 
 				jQuery("#user_pass1").css("border-color", " #f00"); 
 				if (focused == 0) { jQuery("#user_pass1").focus(); focused = 1; } 
 			} 
@@ -82,7 +83,7 @@ if ($api->Managers->check_auth() == true) {
 			if (jQuery("#user_pass2").val() == '')	
 			{ 
 				err_key = 1; 
-				jQuery("#user_pass_info2").html('не указано подтверждение Пароля').css("display", "inline-block"); 
+				jQuery("#user_pass_info2").html('Не указано подтверждение Пароля').css("display", "inline-block"); 
 				jQuery("#user_pass2").css("border-color", "#f00");	
 				if (focused == 0) { jQuery("#user_pass2").focus(); focused = 1; }
 			} 
@@ -90,7 +91,7 @@ if ($api->Managers->check_auth() == true) {
 			if (jQuery("#user_pass1").val() != jQuery("#user_pass2").val()) 
 			{ 
 				err_key = 1; 
-				jQuery("#user_pass_info2").html('не верное подтверждение Пароля').css("display", "inline-block"); 
+				jQuery("#user_pass_info2").html('Неверное подтверждение Пароля').css("display", "inline-block"); 
 				jQuery("#user_pass1").css("border-color", "#f00"); 
 				jQuery("#user_pass2").css("border-color", "#f00"); 	
 				if (focused == 0) { jQuery("#user_pass1").focus(); focused = 1; }  

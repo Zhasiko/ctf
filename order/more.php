@@ -6,9 +6,10 @@ $title = "Задача #" . $_GET["id"];
 $keywords = "";
 $description = "";
 require($_SERVER["DOCUMENT_ROOT"] . "/libs/header.php");
-require_once '../get_encr_key.php';
+
 
 if ($api->Managers->check_auth() == true) {
+    require_once '../get_encr_key.php';
     if (
         (
             $api->Managers->man_block == 3
